@@ -15,6 +15,10 @@ public class Unit : MonoBehaviour
     public bool IsSelected = false;
     public int MoveRange = 3;
     public int TeamSide=1;
+    public int Owner=0;
+
+    public bool IsMoving = false;
+    public bool HasMoved=false; 
     
     //hold the grid position of the valid tiles along with the fuel consumed to reach them
     
@@ -150,7 +154,10 @@ public class Unit : MonoBehaviour
         SeekTile(right, CurrFuel);
     }
     
-    
+    public void MarkMoved()
+    {
+        HasMoved = true;
+    }
 
 }
 

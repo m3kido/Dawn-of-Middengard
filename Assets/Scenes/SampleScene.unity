@@ -167,7 +167,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0fcaaeecc0afcc4287754ff76d0cc24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerTurn: 1
+  PlayerTurn: 0
+  GameEnded: 0
+  Day: 1
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -369,6 +371,50 @@ Transform:
   m_Children:
   - {fileID: 1549217450}
   - {fileID: 2042607303}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1503482918
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1503482920}
+  - component: {fileID: 1503482919}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1503482919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1503482918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b5b68f69139c6b40a07e08cc7d29aa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1503482920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1503482918}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.8596868, y: 0.047725562, z: -5.227865}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1549217449
@@ -2427,8 +2473,6 @@ MonoBehaviour:
   TileDatas:
   - {fileID: 11400000, guid: 1574cfabbd12fe14b8774b8127ae98df, type: 2}
   - {fileID: 11400000, guid: f32556b2a15e77c45bae2f842f357be1, type: 2}
-  UnitDatas:
-  - {fileID: 11400000, guid: 377aff6a34101e841bb51303d0cf5623, type: 2}
 --- !u!4 &1694422650
 Transform:
   m_ObjectHideFlags: 0
@@ -2705,9 +2749,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ffa086c721c8fc45bf3ef823e6a729e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Units: []
   SelectedUnit: {fileID: 0}
-  IsMoving: 0
+  SaveTile: {x: 0, y: 0, z: 0}
   Path: []
   PathCost: 0
 --- !u!1001 &1301395057756584668
@@ -2795,3 +2838,4 @@ SceneRoots:
   - {fileID: 535074747}
   - {fileID: 1896815362}
   - {fileID: 2109399940}
+  - {fileID: 1503482920}

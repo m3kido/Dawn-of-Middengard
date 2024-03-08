@@ -11,15 +11,22 @@ public class CursorControler : MonoBehaviour
     //this is our player controler
     UnitManager Um;
     MapManager Mm;
+    GameManager Gm;
 
-    Vector3Int HoverTile = Vector3Int.zero;
-    Vector3Int SelectedTile;
+    public Vector3Int HoverTile
+    {
+        get => Mm.map.WorldToCell(transform.position);
+        set => transform.position = value;
+    }
+
+
 
     // Start is called before the first frame update
     void Start()
     {
         Um = FindAnyObjectByType<UnitManager>();
         Mm = FindAnyObjectByType<MapManager>();
+        Gm = FindAnyObjectByType<GameManager>();
     }
 
     // Update is called once per frame
@@ -29,36 +36,43 @@ public class CursorControler : MonoBehaviour
     }
     void HandleInput()
     {
-        if (Um.IsMoving) { return; }
+        //dont handle any input if a unit is moving or attacking
+        if (Um.SelectedUnit!= null && Um.SelectedUnit.IsMoving) { return; }
+
+        //will be modified to handle canceling the move
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            if (Um.SelectedUnit != null)
+            {
+                //cancel select
+                HoverTile = Mm.map.WorldToCell(Um.SelectedUnit.transform.position);
+                Um.DeselectUnit();
+               
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            SelectedTile = HoverTile;
-            Unit refUnit = Um.FindUnit(SelectedTile);
+            
+            Unit RefUnit = Um.FindUnit(HoverTile);
             //if there is a unit on that tile
-            if (refUnit != null)
+            if (RefUnit != null)
             {
-                //u cant move to an occupied tile
-                if (Um.SelectedUnit != null && Um.SelectedUnit != refUnit) { return; }
+                //u cant select an another unit when one is selected 
+                //this will be modified
+                if (Um.SelectedUnit != null ) { return;  }
+                //u cant select a unit that isnt yours
+                if (RefUnit.Owner != Gm.PlayerTurn) { return;  }
+                //u cant select a unit that has moved
+                if (RefUnit.HasMoved) { return; }
 
-                Um.SelectedUnit = refUnit;
-                if (Um.SelectedUnit.IsSelected)
-                {
-                    Um.SelectedUnit.ResetTiles();
-                    Um.SelectedUnit = null;
-                    Um.Path.Clear();
-                    Um.PathCost = 0;
-                }
-                else
-                {
-                    Um.SelectedUnit.HighlightTiles();
-
-                }
+                Um.SelectUnit(RefUnit);
             }
             else
             {
                 if (Um.SelectedUnit != null)
                 { 
+                    //move towards the selected tile
                     StartCoroutine(Um.MoveUnit());
                 }
             }
@@ -107,6 +121,7 @@ public class CursorControler : MonoBehaviour
                 //returns -1 if not found
                 if (index < 0)
                 {
+                    //add tile to path
                     int cost = Mm.GetTileData(Mm.map.GetTile<Tile>(HoverTile + offset)).fuelCost;
                     if (Um.PathCost + cost > Um.SelectedUnit.Fuel) { return; }
                     Um.UnDrawPath();
@@ -132,7 +147,7 @@ public class CursorControler : MonoBehaviour
         }
 
         HoverTile += offset;
-        transform.position += offset;
+       
 
     }
  

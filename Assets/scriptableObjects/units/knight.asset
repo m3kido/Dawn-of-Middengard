@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: knight
   m_EditorClassIdentifier: 
   unit: {fileID: -8392252582679079715, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
-  teamSide: 1
   moveRange: 3
+  Defence: 0
+  WalkableTiles: 000000000100000003000000

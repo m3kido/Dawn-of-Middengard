@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34fc1eb3e63299649a6b2344c198bc61, type: 3}
   m_Name: grass
   m_EditorClassIdentifier: 
+  Type: 0
   tiles:
   - {fileID: 11400000, guid: 245f870947496ae43a6f86c45157a84c, type: 2}
   - {fileID: 11400000, guid: c2a3123aaf2019c4e902b668d136a91a, type: 2}
   - {fileID: 11400000, guid: 5b74f17baf08f064c90aa029148b3c39, type: 2}
-  isObstacle: 0
   fuelCost: 10

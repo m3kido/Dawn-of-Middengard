@@ -7,6 +7,7 @@ public class MapManager : MonoBehaviour
 {
     //this game object will handle the map 
     
+    
     public Tilemap map;
     public Tilemap highlight;
     [SerializeField]
@@ -66,7 +67,7 @@ public class MapManager : MonoBehaviour
         return _dataFromTile[map.GetTile<Tile>(tile)];
     }
 
-
+    //calculates the sprite for a tile based on the next tile and previous tile
     public void DrawArrow(Vector3Int prev, Vector3Int curr, Vector3Int next)
     {
         EArrowDirection Arrow=EArrowDirection.None;

@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34fc1eb3e63299649a6b2344c198bc61, type: 3}
   m_Name: water
   m_EditorClassIdentifier: 
+  Type: 3
   tiles:
   - {fileID: 11400000, guid: 98fe279539bd51d4da3ff2c1fdf2348b, type: 2}
-  isObstacle: 1
+  - {fileID: 11400000, guid: 98fe279539bd51d4da3ff2c1fdf2348b, type: 2}
+  - {fileID: 11400000, guid: 98fe279539bd51d4da3ff2c1fdf2348b, type: 2}
   fuelCost: 40

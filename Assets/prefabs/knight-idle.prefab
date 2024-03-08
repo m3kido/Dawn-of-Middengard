@@ -89,4 +89,7 @@ MonoBehaviour:
   Fuel: 100
   IsSelected: 0
   MoveRange: 3
-  TeamSide: 1
+  TeamSide: 0
+  Owner: 0
+  IsMoving: 0
+  HasMoved: 0
