@@ -6,13 +6,14 @@ using UnityEngine.Tilemaps;
 
 public class Unit : MonoBehaviour
 {
-   
+    
     MapManager Mm;
     UnitManager Um;
 
-    public int fuel = 100;
-    public bool isSelected = false;
-    public int moveRange = 3;
+    public UnitData Data;
+    public int Fuel = 100;
+    public bool IsSelected = false;
+    public int MoveRange = 3;
     public int TeamSide=1;
     
     //hold the grid position of the valid tiles along with the fuel consumed to reach them
@@ -32,15 +33,11 @@ public class Unit : MonoBehaviour
     }
 
 
-    public bool IsObstacle(Vector3Int tile, Unit unit)
-    {
-        Unit TileUnit = Um.FindUnit(tile);
-        return (Mm.GetTileData(Mm.map.GetTile<Tile>(tile)).isObstacle || (TileUnit != null && TileUnit.TeamSide != unit.TeamSide));
-    }
+  
     //this function fills the tilefuel dictionary
     public void HighlightTiles()
     {
-        isSelected= true;
+        IsSelected= true;
         //empty to remove previous cases
         ValidTiles.Clear();
         //world to cell takes a float postion and return a grid position (partie entier)
@@ -50,7 +47,7 @@ public class Unit : MonoBehaviour
         
         foreach (var pos in ValidTiles.Keys)
         {
-            if (ValidTiles[pos] <= fuel) {
+            if (ValidTiles[pos] <= Fuel) {
                 Mm.map.SetTileFlags(pos, TileFlags.None);
                 Mm.map.SetColor(pos, Color.red);
             }
@@ -67,7 +64,7 @@ public class Unit : MonoBehaviour
    
     public void ResetTiles()
     {
-        isSelected = false;
+        IsSelected = false;
         foreach (var pos in ValidTiles.Keys)
         {
            
@@ -78,12 +75,19 @@ public class Unit : MonoBehaviour
         ValidTiles.Clear();
     }
 
+    public bool IsObstacle(Vector3Int pos)
+    {
+        Unit TileUnit = Um.FindUnit(pos);
+        if (!Data.IsWalkable(Mm.GetTileData(pos).Type)) { return true; }
+        if (TileUnit != null && TileUnit.TeamSide != TeamSide) { return true; }
+        return false;
+    }
 
     //this function checks if a tile falls in the diamond shape around the player
     private bool InBounds(Vector3Int pos)
     {
         //|x1-x2|+|y1-y2|
-        if (Mathf.Abs(Mm.map.WorldToCell(transform.position).x - pos.x) + Mathf.Abs(Mm.map.WorldToCell(transform.position).y - pos.y) <= moveRange)
+        if (Mathf.Abs(Mm.map.WorldToCell(transform.position).x - pos.x) + Mathf.Abs(Mm.map.WorldToCell(transform.position).y - pos.y) <= MoveRange)
         {
             return true;
         }
@@ -110,11 +114,11 @@ public class Unit : MonoBehaviour
             CurrFuel += Mm.GetTileData(currTile).fuelCost;
         }
        
-        if (CurrFuel > fuel ) { return; }
+        if (CurrFuel > Fuel ) { return; }
 
         //if the tile we are on is not an obstacle and falls in the diamond shape
 
-        if (!IsObstacle(current,this) && InBounds(current))
+        if (!IsObstacle(current) && InBounds(current))
         {
 
             if (!ValidTiles.ContainsKey(current))

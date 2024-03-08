@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 
 public class CursorControler : MonoBehaviour
 {
-    
+    //this is our player controler
     UnitManager Um;
     MapManager Mm;
 
@@ -42,7 +42,7 @@ public class CursorControler : MonoBehaviour
                 if (Um.SelectedUnit != null && Um.SelectedUnit != refUnit) { return; }
 
                 Um.SelectedUnit = refUnit;
-                if (Um.SelectedUnit.isSelected)
+                if (Um.SelectedUnit.IsSelected)
                 {
                     Um.SelectedUnit.ResetTiles();
                     Um.SelectedUnit = null;
@@ -108,7 +108,7 @@ public class CursorControler : MonoBehaviour
                 if (index < 0)
                 {
                     int cost = Mm.GetTileData(Mm.map.GetTile<Tile>(HoverTile + offset)).fuelCost;
-                    if (Um.PathCost + cost > Um.SelectedUnit.fuel) { return; }
+                    if (Um.PathCost + cost > Um.SelectedUnit.Fuel) { return; }
                     Um.UnDrawPath();
                     Um.Path.Add(HoverTile + offset);
                     Um.PathCost += cost;

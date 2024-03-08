@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 public class UnitManager : MonoBehaviour
 {
-    public Unit[] Units;
+    //handles any unit interaction
+    //keeps track of units and the path drawn br the cursor
+    Unit[] Units;
+
     public Unit SelectedUnit;
     public bool IsMoving = false;
 
@@ -14,7 +18,7 @@ public class UnitManager : MonoBehaviour
     public int PathCost = 0;
 
     MapManager Mm;
-    // Start is called before the first frame update
+    
     void Start()
     {
         Mm = FindAnyObjectByType<MapManager>();
@@ -40,6 +44,7 @@ public class UnitManager : MonoBehaviour
         return null;
     }
 
+    
     public void DrawPath()
     {
         if (Path.Count > 1)
@@ -76,7 +81,7 @@ public class UnitManager : MonoBehaviour
         foreach (var pos in Path)
         {
             SelectedUnit.transform.position = pos;
-            SelectedUnit.fuel -= Mm.GetTileData(Mm.map.GetTile<Tile>(pos)).fuelCost;
+            SelectedUnit.Fuel -= Mm.GetTileData(Mm.map.GetTile<Tile>(pos)).fuelCost;
             yield return new WaitForSecondsRealtime(0.08f);
         }
         IsMoving = false;

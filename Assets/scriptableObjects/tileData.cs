@@ -6,8 +6,9 @@ using UnityEngine.Tilemaps;
 [CreateAssetMenu]
 public class TileData : ScriptableObject
 {
+    
+    public UnitData.ETiles Type;
     public Tile[] tiles;
-    public bool isObstacle;
     public int fuelCost;
 
 }

@@ -5,16 +5,15 @@ using UnityEngine.Tilemaps;
 
 public class MapManager : MonoBehaviour
 {
-    //this game object will hold all the functionalities connected to the map
-    //such as the tile and unit datas
+    //this game object will handle the map 
+    
     public Tilemap map;
     public Tilemap highlight;
     [SerializeField]
     private Tile[] ArrowTiles;
     [SerializeField]
     private List<TileData> TileDatas;
-    [SerializeField]
-    private List<UnitData> UnitDatas;
+   
 
     enum EArrowDirection
     {
@@ -32,23 +31,20 @@ public class MapManager : MonoBehaviour
 
     }
    
-    private Dictionary<Tile, TileData> dataFromTile;
-    private Dictionary<Unit, UnitData> dataFromUnit;
+    private Dictionary<Tile, TileData> _dataFromTile;
+    
     private void Awake()
     {
-        dataFromTile = new Dictionary<Tile, TileData>();
-        dataFromUnit = new Dictionary<Unit, UnitData>();
+        _dataFromTile = new Dictionary<Tile, TileData>();
+        
         foreach (var TileData in TileDatas)
         {
             foreach(var tile in TileData.tiles)
             {
-                dataFromTile.Add(tile, TileData);
+                _dataFromTile.Add(tile, TileData);
             }
         }
-        foreach( var unitData in UnitDatas)
-        {
-            dataFromUnit.Add(unitData.unit, unitData);
-        }
+        
         
     }
     void Start()
@@ -63,13 +59,14 @@ public class MapManager : MonoBehaviour
     }
     public TileData GetTileData(Tile tile)
     {
-        return dataFromTile[tile];
+        return _dataFromTile[tile];
     }
-    public UnitData GetUnitData(Unit unit)
+    public TileData GetTileData(Vector3Int tile)
     {
-        return dataFromUnit[unit];
+        return _dataFromTile[map.GetTile<Tile>(tile)];
     }
-    
+
+
     public void DrawArrow(Vector3Int prev, Vector3Int curr, Vector3Int next)
     {
         EArrowDirection Arrow=EArrowDirection.None;
