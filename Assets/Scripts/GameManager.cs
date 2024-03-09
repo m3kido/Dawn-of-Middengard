@@ -1,39 +1,16 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
-public class Player
-{
-    public string Name;
-    public bool Dead = false;
-    public int TeamSide;
-    public int Captain;
-    public int Gold=0;
-    
-    
-    public Player(string Name,int TeamSide,int Captain)
-    {
-       this.Name = Name;
-       this.TeamSide = TeamSide;
-       this.Captain = Captain;
-    }
-}
 //this handles the game logic
 public class GameManager : MonoBehaviour
 {
-    public List<Player> Players;
-    public int PlayerTurn = 0;
-    public bool GameEnded=false;
+    public int PlayerTurn;
+    public bool GameEnded;
     public int Day = 1;
+    public List<Player> Players;
 
-    public static event Action OnTurnEnd;
-    public static event Action OnDayEnd;
-
-    void Start()
+    private void Start()
     {
         Players = new List<Player>
         {
@@ -41,28 +18,21 @@ public class GameManager : MonoBehaviour
             new("Freya", 1, 0)
         };
     }
-   
-    void Update()
+
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            EndTurn();
-        }
+        if (Input.GetKeyDown(KeyCode.C)) EndTurn();
     }
+
+    public static event Action OnTurnEnd;
+    public static event Action OnDayEnd;
+
     private void EndTurn()
     {
-        PlayerTurn= (PlayerTurn+1)%Players.Count;
+        PlayerTurn = (PlayerTurn + 1) % Players.Count;
         OnTurnEnd?.Invoke();
-        if (PlayerTurn == 0)
-        {
-            Day++;
-            OnDayEnd?.Invoke();
-        }
+        if (PlayerTurn != 0) return;
+        Day++;
+        OnDayEnd?.Invoke();
     }
-
- 
- 
-
-
-
 }
