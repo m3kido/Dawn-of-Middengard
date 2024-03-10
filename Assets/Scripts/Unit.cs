@@ -53,7 +53,7 @@ public class Unit : MonoBehaviour
         {
             if (ValidTiles[pos] <= Fuel) {
                 Mm.map.SetTileFlags(pos, TileFlags.None);
-                Mm.map.SetColor(pos, Color.red);
+                Mm.HighlightTile(pos);
             }
             else
             {
@@ -71,10 +71,10 @@ public class Unit : MonoBehaviour
         IsSelected = false;
         foreach (var pos in ValidTiles.Keys)
         {
-           
-             Mm.map.SetColor(pos, Color.white);
-         
-            
+
+            Mm.UnHighlightTile(pos);
+
+
         }
         ValidTiles.Clear();
     }
@@ -115,7 +115,7 @@ public class Unit : MonoBehaviour
         else
         {
             //add the current tile fuel cost to the current fuel
-            CurrFuel += Mm.GetTileData(currTile).fuelCost;
+            CurrFuel += Mm.GetTileData(currTile).FuelCost;
         }
        
         if (CurrFuel > Fuel ) { return; }

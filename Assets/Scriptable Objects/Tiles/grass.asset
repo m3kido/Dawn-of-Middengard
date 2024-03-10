@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: grass
   m_EditorClassIdentifier: 
   Type: 0
-  tiles:
+  Tiles:
   - {fileID: 11400000, guid: 245f870947496ae43a6f86c45157a84c, type: 2}
   - {fileID: 11400000, guid: c2a3123aaf2019c4e902b668d136a91a, type: 2}
   - {fileID: 11400000, guid: 5b74f17baf08f064c90aa029148b3c39, type: 2}
-  fuelCost: 10
+  FuelCost: 10
+  Defence: 1

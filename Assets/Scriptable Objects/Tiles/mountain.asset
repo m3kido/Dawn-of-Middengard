@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34fc1eb3e63299649a6b2344c198bc61, type: 3}
   m_Name: mountain
   m_EditorClassIdentifier: 
-  Type: 2
-  tiles:
+  Type: 1
+  Tiles:
   - {fileID: 11400000, guid: ead029083f059c84580e97d05ebbb787, type: 2}
-  fuelCost: 30
+  FuelCost: 30
+  Defence: 3

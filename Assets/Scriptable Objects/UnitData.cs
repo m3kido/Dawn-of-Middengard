@@ -6,18 +6,11 @@ using UnityEngine;
 public class UnitData : ScriptableObject
 {
     //this holds our units static data
-    public enum ETile
-    {
-        grass,
-        Forest,
-        mountain,
-        water
-    }
-    
+
     public int moveRange;
     public int Defence;
-    public List<ETile> WalkableTiles;
-    public bool IsWalkable(ETile x)
+    public List<ETileType> WalkableTiles;
+    public bool IsWalkable(ETileType x)
     {
         return WalkableTiles.Contains(x);
     }

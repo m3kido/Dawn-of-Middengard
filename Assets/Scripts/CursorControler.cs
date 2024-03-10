@@ -34,48 +34,19 @@ public class CursorControler : MonoBehaviour
     {
         HandleInput();
     }
+
     void HandleInput()
     {
         //dont handle any input if a unit is moving or attacking
         if (Um.SelectedUnit!= null && Um.SelectedUnit.IsMoving) { return; }
-
-        //will be modified to handle canceling the move
         if (Input.GetKeyDown(KeyCode.X))
         {
-            if (Um.SelectedUnit != null)
-            {
-                //cancel select
-                HoverTile = Mm.map.WorldToCell(Um.SelectedUnit.transform.position);
-                Um.DeselectUnit();
-               
-            }
+            XClicked();
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            
-            Unit RefUnit = Um.FindUnit(HoverTile);
-            //if there is a unit on that tile
-            if (RefUnit != null)
-            {
-                //u cant select an another unit when one is selected 
-                //this will be modified
-                if (Um.SelectedUnit != null ) { return;  }
-                //u cant select a unit that isnt yours
-                if (RefUnit.Owner != Gm.PlayerTurn) { return;  }
-                //u cant select a unit that has moved
-                if (RefUnit.HasMoved) { return; }
-
-                Um.SelectUnit(RefUnit);
-            }
-            else
-            {
-                if (Um.SelectedUnit != null)
-                { 
-                    //move towards the selected tile
-                    StartCoroutine(Um.MoveUnit());
-                }
-            }
+            SpaceClicked();
         }
 
         //arrows
@@ -122,7 +93,7 @@ public class CursorControler : MonoBehaviour
                 if (index < 0)
                 {
                     //add tile to path
-                    int cost = Mm.GetTileData(Mm.map.GetTile<Tile>(HoverTile + offset)).fuelCost;
+                    int cost = Mm.GetTileData(Mm.map.GetTile<Tile>(HoverTile + offset)).FuelCost;
                     if (Um.PathCost + cost > Um.SelectedUnit.Fuel) { return; }
                     Um.UnDrawPath();
                     Um.Path.Add(HoverTile + offset);
@@ -138,7 +109,7 @@ public class CursorControler : MonoBehaviour
                     Um.PathCost = 0;
                     foreach (Vector3Int pos in Um.Path)
                     {
-                        Um.PathCost += Mm.GetTileData(Mm.map.GetTile<Tile>(pos)).fuelCost;
+                        Um.PathCost += Mm.GetTileData(Mm.map.GetTile<Tile>(pos)).FuelCost;
                     }
 
                 }
@@ -149,6 +120,48 @@ public class CursorControler : MonoBehaviour
         HoverTile += offset;
        
 
+    }
+    private void XClicked()
+    {
+        //will be modified to handle canceling the move
+        
+            if (Um.SelectedUnit != null)
+            {
+                //cancel select
+                HoverTile = Mm.map.WorldToCell(Um.SelectedUnit.transform.position);
+                Um.DeselectUnit();
+
+            }
+        
+    }
+    private void SpaceClicked()
+    {
+        Unit RefUnit = Um.FindUnit(HoverTile);
+        //if there is a unit on that tile
+        if (RefUnit != null)
+        {
+            //u cant select an another unit when one is selected 
+            //this will be modified
+            if (Um.SelectedUnit != null)
+            {
+                if (Um.SelectedUnit == RefUnit) { Um.DeselectUnit(); }
+                return;
+            }
+            //u cant select a unit that isnt yours
+            if (RefUnit.Owner != Gm.PlayerTurn) { return; }
+            //u cant select a unit that has moved
+            if (RefUnit.HasMoved) { return; }
+
+            Um.SelectUnit(RefUnit);
+        }
+        else
+        {
+            if (Um.SelectedUnit != null)
+            {
+                //move towards the selected tile
+                StartCoroutine(Um.MoveUnit());
+            }
+        }
     }
  
    
