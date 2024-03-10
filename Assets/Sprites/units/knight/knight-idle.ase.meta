@@ -132,7 +132,7 @@ ScriptedImporter:
       y: 4
       width: 28
       height: 26
-    spriteID: 7b20115c75dbd3e46bd57631d13a63a8
+    spriteID: 1d7362e65f563254a9165804fc9654d2
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -152,7 +152,7 @@ ScriptedImporter:
       y: 38
       width: 28
       height: 26
-    spriteID: 2aea1566a8d3aab46a2a559db647491f
+    spriteID: 7e662c6b38c8ccd4ab9c7f64e55a61ce
     spriteBone: []
     spriteOutline: []
     vertices: []
@@ -177,7 +177,7 @@ ScriptedImporter:
         y: 4
         width: 28
         height: 26
-      spriteId: 7b20115c75dbd3e46bd57631d13a63a8
+      spriteId: 1d7362e65f563254a9165804fc9654d2
     - name: knight-idle_Frame_1
       frameIndex: 1
       cellRect:
@@ -185,7 +185,7 @@ ScriptedImporter:
         y: 4
         width: 28
         height: 26
-      spriteId: 2aea1566a8d3aab46a2a559db647491f
+      spriteId: 7e662c6b38c8ccd4ab9c7f64e55a61ce
     linkedCells: []
     parentIndex: -1
   platformSettings:
