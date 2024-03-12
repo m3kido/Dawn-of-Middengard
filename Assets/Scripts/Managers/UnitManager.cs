@@ -35,6 +35,7 @@ public class UnitManager : MonoBehaviour
     }
     private void OnEnable()
     {
+        //subscribe to the day end event
         GameManager.OnDayEnd += ResetUnits;
     }
     private void OnDisable()
