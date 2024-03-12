@@ -18,12 +18,13 @@ public class UnitManager : MonoBehaviour
     public List<Vector3Int> Path = new();
     public int PathCost = 0;
 
-   
+    GameManager Gm;
     MapManager Mm;
     
     void Start()
     {
         Mm = FindAnyObjectByType<MapManager>();
+        Gm = FindAnyObjectByType<GameManager>();
         Units = FindObjectsOfType<Unit>();
     }
 
@@ -53,7 +54,13 @@ public class UnitManager : MonoBehaviour
         }
         return null;
     }
-
+    public bool IsObstacle(Vector3Int pos,Unit unit)
+    {
+        Unit TileUnit = FindUnit(pos);
+        if (!unit.Data.IsWalkable(Mm.GetTileData(pos).TileType)) { return true; }
+        if (TileUnit != null && Gm.Players[TileUnit.Owner].TeamSide != Gm.Players[unit.Owner].TeamSide) { return true; }
+        return false;
+    }
     //draws the arrow path
     public void DrawPath()
     {

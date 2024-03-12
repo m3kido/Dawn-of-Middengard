@@ -56,7 +56,7 @@ public class MapManager : MonoBehaviour
     }
     void Start()
     {
-     
+       
     }
 
     // Update is called once per frame
@@ -82,6 +82,7 @@ public class MapManager : MonoBehaviour
     {
         HighlightMap.SetTile(pos, null);
         Bordermap.SetTile(pos, null);
+        map.SetColor(new Vector3Int(1, 0, 0), Color.cyan);
     }
     //calculates the sprite for a tile based on the next tile and previous tile
     public void DrawArrow(Vector3Int prev, Vector3Int curr, Vector3Int next)

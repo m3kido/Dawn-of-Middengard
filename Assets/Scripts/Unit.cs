@@ -11,11 +11,10 @@ public class Unit : MonoBehaviour
     UnitManager Um;
 
     public UnitData Data;
+    public int Health=10;
     public int Fuel = 100;
     public bool IsSelected = false;
-    public int MoveRange = 3;
-    public int TeamSide=1;
-    public int Owner=0;
+    public int Owner;
 
     public bool IsMoving = false;
     public bool HasMoved=false; 
@@ -28,7 +27,7 @@ public class Unit : MonoBehaviour
     {
         Mm = FindAnyObjectByType<MapManager>();
         Um = FindAnyObjectByType<UnitManager>();
-
+        
     }
     private void Update()
     {
@@ -58,12 +57,8 @@ public class Unit : MonoBehaviour
             else
             {
                 ValidTiles.Remove(pos);
-            }
-           
-            
+            } 
         }
-
-
     }
    
     public void ResetTiles()
@@ -79,19 +74,13 @@ public class Unit : MonoBehaviour
         ValidTiles.Clear();
     }
 
-    public bool IsObstacle(Vector3Int pos)
-    {
-        Unit TileUnit = Um.FindUnit(pos);
-        if (!Data.IsWalkable(Mm.GetTileData(pos).Type)) { return true; }
-        if (TileUnit != null && TileUnit.TeamSide != TeamSide) { return true; }
-        return false;
-    }
+   
 
     //this function checks if a tile falls in the diamond shape around the player
     private bool InBounds(Vector3Int pos)
     {
         //|x1-x2|+|y1-y2|
-        if (Mathf.Abs(Mm.map.WorldToCell(transform.position).x - pos.x) + Mathf.Abs(Mm.map.WorldToCell(transform.position).y - pos.y) <= MoveRange)
+        if (Mathf.Abs(Mm.map.WorldToCell(transform.position).x - pos.x) + Mathf.Abs(Mm.map.WorldToCell(transform.position).y - pos.y) <=Data.MoveRange)
         {
             return true;
         }
@@ -122,7 +111,7 @@ public class Unit : MonoBehaviour
 
         //if the tile we are on is not an obstacle and falls in the diamond shape
 
-        if (!IsObstacle(current) && InBounds(current))
+        if (!Um.IsObstacle(current,this) && InBounds(current))
         {
 
             if (!ValidTiles.ContainsKey(current))

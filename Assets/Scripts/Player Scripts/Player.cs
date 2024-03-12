@@ -3,16 +3,18 @@
 public class Player
 {
     public string Name;
-    public bool Dead = false;
-    public int TeamSide;
-    public int Captain;
+    public bool Lost = false;
+    public EColors Color;
+    public ETeams TeamSide;
+    public Captain Captain;
     public int Gold=0;
     
     
-    public Player(string Name,int TeamSide,int Captain)
+    public Player(string Name,int Color,int TeamSide,Captain Captain)
     {
        this.Name = Name;
-       this.TeamSide = TeamSide;
+       this.Color = (EColors)Color;
+       this.TeamSide = (ETeams)TeamSide;
        this.Captain = Captain;
     }
 }

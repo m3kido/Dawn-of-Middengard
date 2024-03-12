@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 public class TileData : ScriptableObject
 {
     
-    public ETileType Type;
+    public ETileType TileType;
     public Tile[] Tiles;
     public int FuelCost;
     public int Defence;

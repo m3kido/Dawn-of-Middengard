@@ -5,8 +5,8 @@ using UnityEngine;
 //this handles the game logic
 public class GameManager : MonoBehaviour
 {
-    public int PlayerTurn;
-    public bool GameEnded;
+    public int PlayerTurn=0;
+    public bool GameEnded=false;
     public int Day = 1;
     public List<Player> Players;
 
@@ -14,8 +14,8 @@ public class GameManager : MonoBehaviour
     {
         Players = new List<Player>
         {
-            new("Andrew", 0, 0),
-            new("Freya", 1, 0)
+            new("Andrew",0, 0, null),
+            new("Freya",1, 1, null)
         };
     }
 

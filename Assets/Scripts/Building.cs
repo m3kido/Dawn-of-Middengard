@@ -2,22 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Building : MonoBehaviour
+public class Building 
 {
-    // to handle buildings
-    //capture
-    //buy
-    //increase income
-
-    // Start is called before the first frame update
-    void Start()
+    
+    Vector3Int position;
+    public int Owner;
+    public EBuilding BuildingType;
+    public int Health=20;
+    public Building(Vector3Int position,EBuilding BuildingType ,int Owner)
     {
+        this.position = position;
+        this.BuildingType = BuildingType;
+        this.Owner = Owner;
+    
         
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+   
+    
+   
 }

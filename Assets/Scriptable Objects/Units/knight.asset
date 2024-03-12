@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f33c306d5272bf74abe08315384f3d21, type: 3}
   m_Name: knight
   m_EditorClassIdentifier: 
-  moveRange: 3
+  MoveRange: 3
   Defence: 0
   WalkableTiles: 00000000050000000200000003000000
