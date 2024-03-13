@@ -5,53 +5,48 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Unit : MonoBehaviour
-{
-    
+{ 
     MapManager Mm;
     UnitManager Um;
 
     public UnitData Data;
-    public int Health=10;
+    public int Health = 10;
     public int Fuel = 100;
     public bool IsSelected = false;
     public int Owner;
 
     public bool IsMoving = false;
-    public bool HasMoved=false; 
+    public bool HasMoved = false; 
     
-    //hold the grid position of the valid tiles along with the fuel consumed to reach them
+    // Dictionart to hold the grid position of the valid tiles along with the fuel consumed to reach them
     
-    public Dictionary<Vector3Int,int> ValidTiles = new();
+    public Dictionary<Vector3Int, int> ValidTiles = new();
 
     void Start()
     {
+        // Get map and unit manager from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
         Um = FindAnyObjectByType<UnitManager>();
-        
-    }
-    private void Update()
-    {
-        
-        
     }
 
-
-  
-    //this function fills the tilefuel dictionary
+    // Highlight the accessible tiles to the unit
     public void HighlightTiles()
     {
-        IsSelected= true;
-        //empty to remove previous cases
+        IsSelected = true;
+
+        // Empty to remove previous cases
         ValidTiles.Clear();
-        //world to cell takes a float postion and return a grid position (partie entier)
-        Vector3Int startPos = Mm.map.WorldToCell(transform.position);
+
+        // WorlToCell takes a float postion and converts it to grid position
+        Vector3Int startPos = Mm.Map.WorldToCell(transform.position);
         
+        // you can find SeekTile() just below
         SeekTile(startPos, -1);
         
         foreach (var pos in ValidTiles.Keys)
         {
             if (ValidTiles[pos] <= Fuel) {
-                Mm.map.SetTileFlags(pos, TileFlags.None);
+                Mm.Map.SetTileFlags(pos, TileFlags.None);
                 Mm.HighlightTile(pos);
             }
             else
@@ -61,26 +56,22 @@ public class Unit : MonoBehaviour
         }
     }
    
+    // Unhighlight the accessible tiles to the unit
     public void ResetTiles()
     {
         IsSelected = false;
         foreach (var pos in ValidTiles.Keys)
         {
-
             Mm.UnHighlightTile(pos);
-
-
         }
         ValidTiles.Clear();
     }
 
-   
-
-    //this function checks if a tile falls in the diamond shape around the player
+    // Check if the given grid position falls into the move range of the unit
     private bool InBounds(Vector3Int pos)
     {
-        //|x1-x2|+|y1-y2|
-        if (Mathf.Abs(Mm.map.WorldToCell(transform.position).x - pos.x) + Mathf.Abs(Mm.map.WorldToCell(transform.position).y - pos.y) <=Data.MoveRange)
+        // Manhattan distance : |x1 - x2| + |y1 - y2|
+        if (Mathf.Abs(Mm.Map.WorldToCell(transform.position).x - pos.x) + Mathf.Abs(Mm.Map.WorldToCell(transform.position).y - pos.y) <=Data.MoveRange)
         {
             return true;
         }
@@ -88,35 +79,33 @@ public class Unit : MonoBehaviour
     }
 
 
-    //a recursive function
+    // A recursive function to fill the ValidTiles dictionary
     private void SeekTile(Vector3Int current, int CurrFuel)
     {
         
-        //we access the tile on the position
-        Tile currTile = Mm.map.GetTile<Tile>(current);
+        // Access the current tile
+        Tile currTile = Mm.Map.GetTile<Tile>(current);
         if(currTile == null ) { return; }
        
         if (CurrFuel < 0)
         {  
-            //exception for the start tile
+            // Exception for the start tile
             CurrFuel = 0;
         }
         else
         {
-            //add the current tile fuel cost to the current fuel
+            // Add the current tile fuel cost to the current fuel
             CurrFuel += Mm.GetTileData(currTile).FuelCost;
         }
        
         if (CurrFuel > Fuel ) { return; }
 
-        //if the tile we are on is not an obstacle and falls in the diamond shape
-
-        if (!Um.IsObstacle(current,this) && InBounds(current))
+        // If the current tile is not an obstacle and falls into the move range of the unit
+        if (!Um.IsObstacle(current, this) && InBounds(current))
         {
-
             if (!ValidTiles.ContainsKey(current))
             {
-               ValidTiles.Add(current,CurrFuel);
+               ValidTiles.Add(current, CurrFuel);
             }
             else
             {
@@ -124,14 +113,14 @@ public class Unit : MonoBehaviour
                 {
                     ValidTiles[current] = CurrFuel;
                     
-                }else { return; }
+                } else { return; }
             }
         }
          else return;
         
        
-        //we call the funtion to its neighbours
-        //restrictions will be added so that u cant go out of the map
+        // Explore the nighbouring tiles
+        // Restrictions will be added so that we cant go out of the map
         Vector3Int up = current+ Vector3Int.up;
         Vector3Int down = current + Vector3Int.down;
         Vector3Int left = current + Vector3Int.left;
@@ -143,6 +132,7 @@ public class Unit : MonoBehaviour
         SeekTile(right, CurrFuel);
     }
     
+    // Assert the unit has moved
     public void MarkMoved()
     {
         HasMoved = true;

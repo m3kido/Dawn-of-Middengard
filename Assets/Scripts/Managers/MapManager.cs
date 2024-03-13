@@ -5,179 +5,146 @@ using UnityEngine.Tilemaps;
 
 public class MapManager : MonoBehaviour
 {
-    //this game object will handle the map 
-    
-    
-    public Tilemap map;
-    public Tilemap ArrowMap;
+    public Tilemap Map;
     public Tilemap HighlightMap;
     public Tilemap Bordermap;
-    [SerializeField]
-    private Tile[] ArrowTiles;
-    [SerializeField]
-    private AnimatedTile HighlightingTile;
-    [SerializeField]
-    private RuleTile BorderingTile;
-    [SerializeField]
-    private List<TileData> TileDatas;
-   
+    public Tilemap ArrowMap;
 
-    enum EArrowDirection
-    {
-        None=0,
-        Up=1,
-        Down=2,
-        Left=3,
-        Right=4,
-        Horizontal=5,
-        Vertical=6,
-        TopRight=7,
-        TopLeft=8,
-        BottomLeft=9,
-        BottomRight=10,
+    [SerializeField] private List<TileData> _tileDatas;
+    [SerializeField] private AnimatedTile _highlightedTile;
+    [SerializeField] private RuleTile _borderedTile;
+    [SerializeField] private Tile[] _arrowTiles;
 
-    }
-   
     private Dictionary<Tile, TileData> _dataFromTile;
     
+    // Get tile datas of every tile type from the inspector
     private void Awake()
     {
         _dataFromTile = new Dictionary<Tile, TileData>();
         
-        foreach (var TileData in TileDatas)
+        foreach (var tileData in _tileDatas)
         {
-            foreach(var tile in TileData.Tiles)
+            foreach(var tile in tileData.Tiles)
             {
-                _dataFromTile.Add(tile, TileData);
+                _dataFromTile.Add(tile, tileData);
             }
-        }
-        
-        
-    }
-    void Start()
-    {
-       
+        }     
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    // Get data of given tile
     public TileData GetTileData(Tile tile)
     {
         return _dataFromTile[tile];
     }
+
+    // Get data of given grid position - Overloading GetTileData()
     public TileData GetTileData(Vector3Int tile)
     {
-        return _dataFromTile[map.GetTile<Tile>(tile)];
+        return _dataFromTile[Map.GetTile<Tile>(tile)];
     }
+
+    // Highlight the given grid position
     public void HighlightTile(Vector3Int pos)
     {
-        HighlightMap.SetTile(pos, HighlightingTile);
-        Bordermap.SetTile(pos, BorderingTile);
+        HighlightMap.SetTile(pos, _highlightedTile);
+        Bordermap.SetTile(pos, _borderedTile);
         Bordermap.SetColor(pos, Color.yellow);
     }
+
+    // Unhighlight the given grid position
     public void UnHighlightTile(Vector3Int pos)
     {
         HighlightMap.SetTile(pos, null);
         Bordermap.SetTile(pos, null);
       
     }
-    //calculates the sprite for a tile based on the next tile and previous tile
+
+    // Select the adequate arrow sprite based on the next tile and the previous one
     public void DrawArrow(Vector3Int prev, Vector3Int curr, Vector3Int next)
     {
-        EArrowDirection Arrow=EArrowDirection.None;
+        EArrowDirections arrow = EArrowDirections.None;
 
-        Vector2 DistancePrev = new Vector2(curr.x - prev.x, curr.y - prev.y);
-        Vector2 DistanceNext = new Vector2(next.x- curr.x,next.y- curr.y);
-        Vector2 Distance= DistancePrev != DistanceNext ? DistanceNext + DistancePrev: DistanceNext ;
+        Vector2 distancePrev = new(curr.x - prev.x, curr.y - prev.y);
+        Vector2 distanceNext = new(next.x - curr.x, next.y - curr.y);
+        Vector2 distance = distancePrev != distanceNext ? distanceNext + distancePrev : distanceNext;
 
-        if(Distance == new Vector2(0, 0))
+        if(distance == new Vector2(0, 0))
         {
-            Arrow= EArrowDirection.None ;
+            arrow = EArrowDirections.None ;
         }
-        else if (Distance == new Vector2(1, 0) && next==curr )
+        else if (distance == new Vector2(1, 0) && next == curr )
         {
-            Arrow = EArrowDirection.Right;
+            arrow = EArrowDirections.Right;
         }
-        else if (Distance == new Vector2(-1, 0) && next == curr)
+        else if (distance == new Vector2(-1, 0) && next == curr)
         {
-            Arrow = EArrowDirection.Left;
+            arrow = EArrowDirections.Left;
         }
-        else if (Distance == new Vector2(0, 1) && next == curr)
+        else if (distance == new Vector2(0, 1) && next == curr)
         {
-            Arrow = EArrowDirection.Up;
+            arrow = EArrowDirections.Up;
         }
-        else if (Distance == new Vector2(0, -1) && next == curr)
+        else if (distance == new Vector2(0, -1) && next == curr)
         {
-            Arrow = EArrowDirection.Down;
+            arrow = EArrowDirections.Down;
         }
-        else if (Distance == new Vector2(1, 0) || Distance == new Vector2(-1, 0))
+        else if (distance == new Vector2(1, 0) || distance == new Vector2(-1, 0))
         {
-            Arrow = EArrowDirection.Horizontal;
+            arrow = EArrowDirections.Horizontal;
         }
-        else if (Distance == new Vector2(0, 1) || Distance == new Vector2(0, -1))
+        else if (distance == new Vector2(0, 1) || distance == new Vector2(0, -1))
         {
-            Arrow = EArrowDirection.Vertical;
+            arrow = EArrowDirections.Vertical;
         }
-        else if (Distance == new Vector2(1, 1) )
+        else if (distance == new Vector2(1, 1))
         {
             if (curr.y != prev.y)
             {
-                Arrow = EArrowDirection.TopRight;
+                arrow = EArrowDirections.TopRight;
             }
             else
             {
-                Arrow = EArrowDirection.BottomLeft;
+                arrow = EArrowDirections.BottomLeft;
             }
-           
         }
-        else if (Distance == new Vector2(-1, 1))
+        else if (distance == new Vector2(-1, 1))
         {
             
             if (curr.y != prev.y)
             {
-                Arrow = EArrowDirection.TopLeft;
+                arrow = EArrowDirections.TopLeft;
             }
             else
             {
-                Arrow = EArrowDirection.BottomRight;
+                arrow = EArrowDirections.BottomRight;
             }
 
         }
-        else if (Distance == new Vector2(1, -1))
+        else if (distance == new Vector2(1, -1))
         {
            
             if (curr.y != prev.y)
             {
-                Arrow = EArrowDirection.BottomRight;
+                arrow = EArrowDirections.BottomRight;
             }
             else
             {
-                Arrow = EArrowDirection.TopLeft;
+                arrow = EArrowDirections.TopLeft;
             }
 
         }
-        else if (Distance == new Vector2(-1, -1))
+        else if (distance == new Vector2(-1, -1))
         {
             
             if (curr.y != prev.y)
             {
-                Arrow = EArrowDirection.BottomLeft;
+                arrow = EArrowDirections.BottomLeft;
             }
             else
             {
-                Arrow = EArrowDirection.TopRight;
+                arrow = EArrowDirections.TopRight;
             }
-
         }
-      
-        
-        ArrowMap.SetTile(curr, ArrowTiles[(int)Arrow]);
-        
-        
+        ArrowMap.SetTile(curr, _arrowTiles[(int)arrow]);
     }
-
-
 }

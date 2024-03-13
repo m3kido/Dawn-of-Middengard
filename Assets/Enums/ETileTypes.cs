@@ -1,5 +1,4 @@
-﻿
-public enum ETileType
+﻿public enum ETileTypes
 {
     Land,
     HardTerrain,

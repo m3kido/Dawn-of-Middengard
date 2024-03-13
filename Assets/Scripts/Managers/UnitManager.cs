@@ -5,15 +5,15 @@ using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+
+// This script handles unit interactions and
+// keeps track of units and the path drawn by the cursor
 public class UnitManager : MonoBehaviour
 {
-    //handles any unit interaction
-    //keeps track of units and the path drawn br the cursor
+    // Array of units
     Unit[] Units;
 
     public Unit SelectedUnit;
-    
-
     public Vector3Int SaveTile;
     public List<Vector3Int> Path = new();
     public int PathCost = 0;
@@ -23,62 +23,65 @@ public class UnitManager : MonoBehaviour
     
     void Start()
     {
+        // Get map and game managers from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
         Gm = FindAnyObjectByType<GameManager>();
+
+        // Seek for units in the hierarchy
         Units = FindObjectsOfType<Unit>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void OnEnable()
     {
-        //subscribe to the day end event
+        // Subscribe to the day end event
         GameManager.OnDayEnd += ResetUnits;
     }
     private void OnDisable()
     {
+        // Unsubscribe from the day end event
         GameManager.OnDayEnd -= ResetUnits;
     }
-    //gets the unit on that tile
+
+    // Get unit from given grid position
     public Unit FindUnit(Vector3Int pos)
     {
         foreach (Unit unit in Units)
         {
-            if (Mm.map.WorldToCell(unit.transform.position) == pos)
+            if (Mm.Map.WorldToCell(unit.transform.position) == pos)
             {
                 return unit;
             }
-
         }
         return null;
     }
-    public bool IsObstacle(Vector3Int pos,Unit unit)
+
+    // Check if the given position is an obstacle
+    public bool IsObstacle(Vector3Int pos, Unit unit)
     {
-        Unit TileUnit = FindUnit(pos);
+        Unit tileUnit = FindUnit(pos);
         if (!unit.Data.IsWalkable(Mm.GetTileData(pos).TileType)) { return true; }
-        if (TileUnit != null && Gm.Players[TileUnit.Owner].TeamSide != Gm.Players[unit.Owner].TeamSide) { return true; }
+        if (tileUnit != null && Gm.Players[tileUnit.Owner].TeamSide != Gm.Players[unit.Owner].TeamSide) { return true; }
         return false;
     }
-    //draws the arrow path
+
+    // Draw the arrow path
     public void DrawPath()
     {
        
-            for (int i = 0; i < Path.Count ; i++)
+            for (int i = 0; i < Path.Count; i++)
             {
                 if (i == 0)
                 {
                     //start case because the start point is not in the path list
-                    Mm.DrawArrow(Mm.map.WorldToCell(SelectedUnit.transform.position), Path[0], Path[Mathf.Clamp( 1, 0, Path.Count - 1)]);
+                    Mm.DrawArrow(Mm.Map.WorldToCell(SelectedUnit.transform.position), Path[0], Path[Mathf.Clamp(1, 0, Path.Count - 1)]);
                     continue;
                 }
                 //the clamp is for capping the i at its max (path.count -1)
-                Mm.DrawArrow(Path[i - 1],Path[i],Path[Mathf.Clamp( i + 1,0,Path.Count-1)]);
+                Mm.DrawArrow(Path[i - 1], Path[i], Path[Mathf.Clamp(i + 1, 0, Path.Count - 1)]);
             }
     }
-    //this undraws the path arrow
+
+    // Undraw the arrow path
     public void UnDrawPath()
     {
         foreach (var pos in Path)
@@ -87,9 +90,24 @@ public class UnitManager : MonoBehaviour
         }
     }
 
+    // select a given unit
+    public void SelectUnit(Unit unit)
+    {
+        SelectedUnit = unit;
+        SelectedUnit.HighlightTiles();
+    }
 
-    //moves the unit
-    //will be modified to handle showing the bar UI (for confirming the move and attacking ..)
+    // Deselect the selected unit
+    public void DeselectUnit()
+    {
+        SelectedUnit.ResetTiles();
+        UnDrawPath();
+        SelectedUnit = null;
+        Path.Clear();
+        PathCost = 0;
+    }
+
+    // Move the selected unit
     public IEnumerator MoveUnit()
     {
         SelectedUnit.IsMoving = true;
@@ -98,7 +116,7 @@ public class UnitManager : MonoBehaviour
         foreach (var pos in Path)
         {
             SelectedUnit.transform.position = pos;
-            SelectedUnit.Fuel -= Mm.GetTileData(Mm.map.GetTile<Tile>(pos)).FuelCost;
+            SelectedUnit.Fuel -= Mm.GetTileData(Mm.Map.GetTile<Tile>(pos)).FuelCost;
             yield return new WaitForSecondsRealtime(0.08f);
         }
         SelectedUnit.IsMoving = false;
@@ -109,26 +127,11 @@ public class UnitManager : MonoBehaviour
         SelectedUnit = null;
     }
     
-    //this runs at the end of the day 
-    //will be modified to reset has attacked
+    // Runs at the end of the day 
     private void ResetUnits()
     {
         foreach(var unit in Units) {
             unit.HasMoved= false;
         }
-    }
-
-    public void DeselectUnit()
-    {
-        SelectedUnit.ResetTiles();
-        UnDrawPath();
-        SelectedUnit = null;
-        Path.Clear();
-        PathCost = 0;
-    }
-    public void SelectUnit(Unit unit)
-    {
-        SelectedUnit = unit;
-        SelectedUnit.HighlightTiles();
     }
 }

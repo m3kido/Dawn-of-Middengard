@@ -5,13 +5,11 @@ using UnityEngine;
 [CreateAssetMenu]
 public class UnitData : ScriptableObject
 {
-    //this holds our units static data
-
     public int MoveRange;
     public int Defence;
-    public List<ETileType> WalkableTiles;
+    public List<ETileTypes> WalkableTiles;
 
-    public bool IsWalkable(ETileType x)
+    public bool IsWalkable(ETileTypes x)
     {
         return WalkableTiles.Contains(x);
     }

@@ -5,11 +5,9 @@ using UnityEngine.Tilemaps;
 
 [CreateAssetMenu]
 public class TileData : ScriptableObject
-{
-    
-    public ETileType TileType;
+{  
+    public ETileTypes TileType;
     public Tile[] Tiles;
     public int FuelCost;
     public int Defence;
-
 }

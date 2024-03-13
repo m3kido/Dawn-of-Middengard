@@ -2,48 +2,57 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+
 public class BuildingManager : MonoBehaviour
 {
-    Dictionary<Vector3Int, Building> Buildings;
     MapManager Mm;
     GameManager Gm;
-    [SerializeField]
-    private BuildingData[] BuildingDatas;
 
-    private Dictionary<Tile, BuildingData> _BuildingTileData;
+    private Dictionary<Vector3Int, Building> _buildings;
+    private Dictionary<Tile, BuildingData> _buildingTileData;
+    [SerializeField] private BuildingData[] _buildingDatas;
 
-    
+    // Get Building datas of every building type from the inspector
     private void Awake()
     {
-        _BuildingTileData = new Dictionary<Tile, BuildingData>();
+        _buildingTileData = new Dictionary<Tile, BuildingData>();
 
-        foreach (var BuildingData in BuildingDatas)
+        foreach (var buildingData in _buildingDatas)
         {   
-                _BuildingTileData.Add(BuildingData.Building, BuildingData);
+                _buildingTileData.Add(buildingData.Building, buildingData);
         }
     }
+
     void Start()
     {
+        // Get the Map and Game Managers from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
-        Gm= FindAnyObjectByType<GameManager>();
+        Gm = FindAnyObjectByType<GameManager>();
 
+        // Scan the map and put all the buldings in the _buildings dictionary
         ScanMapForBuildings();
     }
+
+    // Scan the map and put all the buldings in the _buildings dictionary
     private void ScanMapForBuildings()
     {
-        foreach (var Pos in Mm.map.cellBounds.allPositionsWithin)
+        foreach (var pos in Mm.Map.cellBounds.allPositionsWithin)
         {
-            if (Mm.GetTileData(Pos).TileType == ETileType.Building)
+            if (Mm.GetTileData(pos).TileType == ETileTypes.Building)
             {
-                BuildingData CurrData = _BuildingTileData[Mm.map.GetTile<Tile>(Pos)];
-                Buildings.Add(Pos, new Building(Pos,CurrData.BuildingType, (int)CurrData.Color));
+                BuildingData CurrData = _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
+                _buildings.Add(pos, new Building(pos,CurrData.BuildingType, (int)CurrData.Color));
             }
         }
     }
+
+    // Get building data of given grid position
     public BuildingData GetBuildingData(Vector3Int pos)
     {
-        return _BuildingTileData[Mm.map.GetTile<Tile>(pos)];
+        return _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
     }
+
+    // Capture building
     public void CaptureBuilding(Building building, Unit unit)
     {
         building.Health -= unit.Health;
@@ -53,8 +62,9 @@ public class BuildingManager : MonoBehaviour
             building.Health = 20;
         }
     }
-    public void SpawnUnit(EUnits UnitType ,Building building)
+
+/*    public void SpawnUnit(EUnits unitType ,Building building)
     {
         
-    }
+    }*/
 }
