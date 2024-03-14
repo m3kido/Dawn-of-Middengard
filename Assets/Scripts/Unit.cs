@@ -81,44 +81,39 @@ public class Unit : MonoBehaviour
 
     public bool IsObstacle(Vector3Int pos)
     {
-        Unit TileUnit = Um.FindUnit(pos);
-        if (!Data.IsWalkable(Mm.GetTileData(pos).Type)) { return true; }
-        if (TileUnit != null && TileUnit.TeamSide != TeamSide) { return true; }
-        return false;
+        Unit tileUnit = Um.FindUnit(pos);
+        return (!tileUnit && tileUnit.TeamSide != TeamSide) || !Data.IsWalkable(Mm.GetTileData(pos).Type);
     }
 
     //this function checks if a tile falls in the diamond shape around the player
     private bool InBounds(Vector3Int pos)
     {
         //|x1-x2|+|y1-y2|
-        if (Mathf.Abs(Mm.map.WorldToCell(transform.position).x - pos.x) + Mathf.Abs(Mm.map.WorldToCell(transform.position).y - pos.y) <= MoveRange)
-        {
-            return true;
-        }
-        return false;
+        var position = transform.position;
+        return Mathf.Abs(Mm.map.WorldToCell(position).x - pos.x) + Mathf.Abs(Mm.map.WorldToCell(position).y - pos.y) <= MoveRange;
     }
 
 
     //a recursive function
-    private void SeekTile(Vector3Int current, int CurrFuel)
+    private void SeekTile(Vector3Int current, int currFuel)
     {
         
         //we access the tile on the position
         Tile currTile = Mm.map.GetTile<Tile>(current);
-        if(currTile == null ) { return; }
+        if(!currTile ) return; 
        
-        if (CurrFuel < 0)
+        if (currFuel < 0)
         {  
             //exception for the start tile
-            CurrFuel = 0;
+            currFuel = 0;
         }
         else
         {
             //add the current tile fuel cost to the current fuel
-            CurrFuel += Mm.GetTileData(currTile).fuelCost;
+            currFuel += Mm.GetTileData(currTile).fuelCost;
         }
        
-        if (CurrFuel > Fuel ) { return; }
+        if (currFuel > Fuel ) { return; }
 
         //if the tile we are on is not an obstacle and falls in the diamond shape
 
@@ -127,18 +122,18 @@ public class Unit : MonoBehaviour
 
             if (!ValidTiles.ContainsKey(current))
             {
-               ValidTiles.Add(current,CurrFuel);
+               ValidTiles.Add(current,currFuel);
             }
             else
             {
-                if(CurrFuel < ValidTiles[current])
+                if(currFuel < ValidTiles[current])
                 {
-                    ValidTiles[current] = CurrFuel;
+                    ValidTiles[current] = currFuel;
                     
                 }else { return; }
             }
         }
-         else return;
+        else return;
         
        
         //we call the funtion to its neighbours
@@ -148,15 +143,20 @@ public class Unit : MonoBehaviour
         Vector3Int left = current + Vector3Int.left;
         Vector3Int right = current + Vector3Int.right;
 
-        SeekTile(up, CurrFuel);
-        SeekTile(down, CurrFuel);
-        SeekTile(left, CurrFuel);
-        SeekTile(right, CurrFuel);
+        SeekTile(up, currFuel);
+        SeekTile(down, currFuel);
+        SeekTile(left, currFuel);
+        SeekTile(right, currFuel);
     }
     
     public void MarkMoved()
     {
         HasMoved = true;
+    }
+    
+    void FindTargets()
+    {
+        
     }
 
 }
