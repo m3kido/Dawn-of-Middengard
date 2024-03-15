@@ -386,6 +386,54 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &429304255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 429304257}
+  - component: {fileID: 429304256}
+  m_Layer: 0
+  m_Name: Building Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &429304256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429304255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b54037c960d64ba40b6548e93bd25e80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UnitPrefabs:
+  - {fileID: -8392252582679079715, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
+  _buildingDatas:
+  - {fileID: 11400000, guid: 287081259bbf3284fb0a073bbfac4d0e, type: 2}
+--- !u!4 &429304257
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429304255}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1480,8 +1528,8 @@ Tilemap:
   - first: {x: -7, y: -2, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 15
-      m_TileSpriteIndex: 15
+      m_TileIndex: 12
+      m_TileSpriteIndex: 12
       m_TileMatrixIndex: 0
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
@@ -2743,13 +2791,13 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 11400000, guid: fc340f26843474f4da6fa1a1b4b608e9, type: 2}
   - m_RefCount: 15
     m_Data: {fileID: 11400000, guid: ead029083f059c84580e97d05ebbb787, type: 2}
   - m_RefCount: 13
     m_Data: {fileID: 11400000, guid: 5b74f17baf08f064c90aa029148b3c39, type: 2}
-  - m_RefCount: 152
+  - m_RefCount: 151
     m_Data: {fileID: 11400000, guid: c2a3123aaf2019c4e902b668d136a91a, type: 2}
   m_TileSpriteArray:
   - m_RefCount: 0
@@ -2776,13 +2824,13 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 921032302, guid: 34dd0803de28f114eb6418fd19046493, type: 3}
   - m_RefCount: 15
     m_Data: {fileID: -490229740, guid: 34dd0803de28f114eb6418fd19046493, type: 3}
   - m_RefCount: 13
     m_Data: {fileID: 1917272184, guid: 34dd0803de28f114eb6418fd19046493, type: 3}
-  - m_RefCount: 152
+  - m_RefCount: 151
     m_Data: {fileID: -766461537, guid: 34dd0803de28f114eb6418fd19046493, type: 3}
   m_TileMatrixArray:
   - m_RefCount: 180
@@ -3202,6 +3250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ffa086c721c8fc45bf3ef823e6a729e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Units: []
   SelectedUnit: {fileID: 0}
   SaveTile: {x: 0, y: 0, z: 0}
   Path: []
@@ -3300,10 +3349,11 @@ SceneRoots:
   - {fileID: 1896815362}
   - {fileID: 1652304704}
   - {fileID: 124008779}
+  - {fileID: 429304257}
   - {fileID: 362950345}
   - {fileID: 1258833075}
   - {fileID: 1694422650}
   - {fileID: 633928599}
-  - {fileID: 1503482920}
-  - {fileID: 1335749772}
   - {fileID: 2109399940}
+  - {fileID: 1335749772}
+  - {fileID: 1503482920}

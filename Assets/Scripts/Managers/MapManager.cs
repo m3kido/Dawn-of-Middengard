@@ -38,9 +38,12 @@ public class MapManager : MonoBehaviour
     }
 
     // Get data of given grid position - Overloading GetTileData()
-    public TileData GetTileData(Vector3Int tile)
+    public TileData GetTileData(Vector3Int Pos)
     {
-        return _dataFromTile[Map.GetTile<Tile>(tile)];
+        var tile = Map.GetTile<Tile>(Pos);
+        if (tile == null) { return null; }
+        return _dataFromTile[tile];
+
     }
 
     // Highlight the given grid position

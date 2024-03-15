@@ -10,6 +10,7 @@ public class CursorController : MonoBehaviour
 {
     UnitManager Um;
     MapManager Mm;
+    BuildingManager Bm;
     GameManager Gm;
 
     public Vector3Int HoverTile
@@ -24,6 +25,7 @@ public class CursorController : MonoBehaviour
         Um = FindAnyObjectByType<UnitManager>();
         Mm = FindAnyObjectByType<MapManager>();
         Gm = FindAnyObjectByType<GameManager>();
+        Bm= FindAnyObjectByType<BuildingManager>();
     }
 
     void Update()
@@ -160,6 +162,13 @@ public class CursorController : MonoBehaviour
             {
                 // Move towards the selected tile
                 StartCoroutine(Um.MoveUnit());
+            }
+            else
+            {
+                if (Bm.Buildings.ContainsKey(HoverTile))
+                {
+                    Bm.SpawnUnit(EUnits.Knight, Bm.Buildings[HoverTile], Gm.PlayerTurn);
+                }
             }
         }
     }

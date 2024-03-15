@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -11,7 +12,7 @@ using UnityEngine.Tilemaps;
 public class UnitManager : MonoBehaviour
 {
     // Array of units
-    Unit[] Units;
+    public List<Unit> Units;
 
     public Unit SelectedUnit;
     public Vector3Int SaveTile;
@@ -28,7 +29,8 @@ public class UnitManager : MonoBehaviour
         Gm = FindAnyObjectByType<GameManager>();
 
         // Seek for units in the hierarchy
-        Units = FindObjectsOfType<Unit>();
+        Units = FindObjectsOfType<Unit>().ToList();
+        
     }
 
     private void OnEnable()

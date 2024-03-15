@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf90222ecf31e414aa33b7136dd750c8, type: 3}
   m_Name: HQ
   m_EditorClassIdentifier: 
-  Building: {fileID: 0}
+  Building: {fileID: 11400000, guid: fc340f26843474f4da6fa1a1b4b608e9, type: 2}
   Color: 2
   BuildingType: 0
   DeployableUnits: 

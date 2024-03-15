@@ -1,16 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class BuildingManager : MonoBehaviour
 {
     MapManager Mm;
+    UnitManager Um;
     GameManager Gm;
 
-    private Dictionary<Vector3Int, Building> _buildings;
+
+    [SerializeField]
+    private List<Unit> UnitPrefabs;
     private Dictionary<Tile, BuildingData> _buildingTileData;
     [SerializeField] private BuildingData[] _buildingDatas;
+
+
+    public Dictionary<Vector3Int, Building> Buildings;
 
     // Get Building datas of every building type from the inspector
     private void Awake()
@@ -18,8 +25,8 @@ public class BuildingManager : MonoBehaviour
         _buildingTileData = new Dictionary<Tile, BuildingData>();
 
         foreach (var buildingData in _buildingDatas)
-        {   
-                _buildingTileData.Add(buildingData.Building, buildingData);
+        {
+            _buildingTileData.Add(buildingData.Building, buildingData);
         }
     }
 
@@ -28,21 +35,29 @@ public class BuildingManager : MonoBehaviour
         // Get the Map and Game Managers from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
         Gm = FindAnyObjectByType<GameManager>();
+        Um = FindAnyObjectByType<UnitManager>();
 
         // Scan the map and put all the buldings in the _buildings dictionary
         ScanMapForBuildings();
+
     }
 
     // Scan the map and put all the buldings in the _buildings dictionary
     private void ScanMapForBuildings()
     {
+        Buildings = new Dictionary<Vector3Int, Building>();
         foreach (var pos in Mm.Map.cellBounds.allPositionsWithin)
         {
-            if (Mm.GetTileData(pos).TileType == ETileTypes.Building)
-            {
-                BuildingData CurrData = _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
-                _buildings.Add(pos, new Building(pos,CurrData.BuildingType, (int)CurrData.Color));
-            }
+            TileData PosTile = Mm.GetTileData(pos);
+
+            if (PosTile != null && PosTile.TileType == ETileTypes.Building)
+
+                if (PosTile != null && PosTile.TileType == ETileTypes.Building)
+                {
+                    BuildingData CurrData = _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
+                    Buildings.Add(pos, new Building(pos, CurrData.BuildingType, (int)CurrData.Color));
+
+                }
         }
     }
 
@@ -63,8 +78,15 @@ public class BuildingManager : MonoBehaviour
         }
     }
 
-/*    public void SpawnUnit(EUnits unitType ,Building building)
+    public void SpawnUnit(EUnits UnitType, Building building, int Owner)
     {
+        Unit NewUnit = Instantiate<Unit>(UnitPrefabs[(int)UnitType], building.Position, Quaternion.identity);
+        NewUnit.Owner = Owner;
+        NewUnit.HasMoved = true;
+        //outline this mf
+        if (NewUnit == null) { print("d");return; }
+        Um.Units.Add(NewUnit);
         
-    }*/
+    }
+
 }
