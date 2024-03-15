@@ -5,8 +5,8 @@ using UnityEngine.Tilemaps;
 
 public class BuildingManager : MonoBehaviour
 {
-    MapManager Mm;
-    GameManager Gm;
+    private MapManager Mm;
+    private GameManager Gm;
 
     private Dictionary<Vector3Int, Building> _buildings;
     private Dictionary<Tile, BuildingData> _buildingTileData;
@@ -17,13 +17,10 @@ public class BuildingManager : MonoBehaviour
     {
         _buildingTileData = new Dictionary<Tile, BuildingData>();
 
-        foreach (var buildingData in _buildingDatas)
-        {   
-                _buildingTileData.Add(buildingData.Building, buildingData);
-        }
+        foreach (var buildingData in _buildingDatas) _buildingTileData.Add(buildingData.Building, buildingData);
     }
 
-    void Start()
+    private void Start()
     {
         // Get the Map and Game Managers from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
@@ -37,13 +34,11 @@ public class BuildingManager : MonoBehaviour
     private void ScanMapForBuildings()
     {
         foreach (var pos in Mm.Map.cellBounds.allPositionsWithin)
-        {
             if (Mm.GetTileData(pos).TileType == ETileTypes.Building)
             {
-                BuildingData CurrData = _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
-                _buildings.Add(pos, new Building(pos,CurrData.BuildingType, (int)CurrData.Color));
+                var CurrData = _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
+                _buildings.Add(pos, new Building(pos, CurrData.BuildingType, (int)CurrData.Color));
             }
-        }
     }
 
     // Get building data of given grid position
@@ -65,6 +60,6 @@ public class BuildingManager : MonoBehaviour
 
 /*    public void SpawnUnit(EUnits unitType ,Building building)
     {
-        
+
     }*/
 }

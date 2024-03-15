@@ -11,17 +11,17 @@ using UnityEngine.Tilemaps;
 public class UnitManager : MonoBehaviour
 {
     // Array of units
-    Unit[] Units;
+    private Unit[] Units;
 
     public Unit SelectedUnit;
     public Vector3Int SaveTile;
     public List<Vector3Int> Path = new();
     public int PathCost = 0;
 
-    GameManager Gm;
-    MapManager Mm;
-    
-    void Start()
+    private GameManager Gm;
+    private MapManager Mm;
+
+    private void Start()
     {
         // Get map and game managers from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
@@ -36,6 +36,7 @@ public class UnitManager : MonoBehaviour
         // Subscribe to the day end event
         GameManager.OnDayEnd += ResetUnits;
     }
+
     private void OnDisable()
     {
         // Unsubscribe from the day end event
@@ -45,49 +46,43 @@ public class UnitManager : MonoBehaviour
     // Get unit from given grid position
     public Unit FindUnit(Vector3Int pos)
     {
-        foreach (Unit unit in Units)
-        {
+        foreach (var unit in Units)
             if (Mm.Map.WorldToCell(unit.transform.position) == pos)
-            {
                 return unit;
-            }
-        }
         return null;
     }
 
     // Check if the given position is an obstacle
     public bool IsObstacle(Vector3Int pos, Unit unit)
     {
-        Unit tileUnit = FindUnit(pos);
-        if (!unit.Data.IsWalkable(Mm.GetTileData(pos).TileType)) { return true; }
-        if (tileUnit != null && Gm.Players[tileUnit.Owner].TeamSide != Gm.Players[unit.Owner].TeamSide) { return true; }
+        var tileUnit = FindUnit(pos);
+        if (!unit.Data.IsWalkable(Mm.GetTileData(pos).TileType)) return true;
+        if (tileUnit != null && Gm.Players[tileUnit.Owner].TeamSide != Gm.Players[unit.Owner].TeamSide) return true;
         return false;
     }
 
     // Draw the arrow path
     public void DrawPath()
     {
-       
-            for (int i = 0; i < Path.Count; i++)
+        for (var i = 0; i < Path.Count; i++)
+        {
+            if (i == 0)
             {
-                if (i == 0)
-                {
-                    //start case because the start point is not in the path list
-                    Mm.DrawArrow(Mm.Map.WorldToCell(SelectedUnit.transform.position), Path[0], Path[Mathf.Clamp(1, 0, Path.Count - 1)]);
-                    continue;
-                }
-                //the clamp is for capping the i at its max (path.count -1)
-                Mm.DrawArrow(Path[i - 1], Path[i], Path[Mathf.Clamp(i + 1, 0, Path.Count - 1)]);
+                //start case because the start point is not in the path list
+                Mm.DrawArrow(Mm.Map.WorldToCell(SelectedUnit.transform.position), Path[0],
+                    Path[Mathf.Clamp(1, 0, Path.Count - 1)]);
+                continue;
             }
+
+            //the clamp is for capping the i at its max (path.count -1)
+            Mm.DrawArrow(Path[i - 1], Path[i], Path[Mathf.Clamp(i + 1, 0, Path.Count - 1)]);
+        }
     }
 
     // Undraw the arrow path
     public void UnDrawPath()
     {
-        foreach (var pos in Path)
-        {
-            Mm.DrawArrow(pos, pos, pos);
-        }
+        foreach (var pos in Path) Mm.DrawArrow(pos, pos, pos);
     }
 
     // select a given unit
@@ -119,6 +114,7 @@ public class UnitManager : MonoBehaviour
             SelectedUnit.Fuel -= Mm.GetTileData(Mm.Map.GetTile<Tile>(pos)).FuelCost;
             yield return new WaitForSecondsRealtime(0.08f);
         }
+
         SelectedUnit.IsMoving = false;
 
         Path.Clear();
@@ -126,12 +122,10 @@ public class UnitManager : MonoBehaviour
         SelectedUnit.MarkMoved();
         SelectedUnit = null;
     }
-    
+
     // Runs at the end of the day 
     private void ResetUnits()
     {
-        foreach(var unit in Units) {
-            unit.HasMoved= false;
-        }
+        foreach (var unit in Units) unit.HasMoved = false;
     }
 }
