@@ -9,11 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34fc1eb3e63299649a6b2344c198bc61, type: 3}
-  m_Name: Mountain
+  m_Script: {fileID: 11500000, guid: bf90222ecf31e414aa33b7136dd750c8, type: 3}
+  m_Name: HQ
   m_EditorClassIdentifier: 
-  TileType: 1
-  Tiles:
-  - {fileID: 11400000, guid: ead029083f059c84580e97d05ebbb787, type: 2}
-  FuelCost: 30
-  Defence: 3
+  Building: {fileID: 0}
+  Color: 2
+  BuildingType: 0
+  DeployableUnits: 
