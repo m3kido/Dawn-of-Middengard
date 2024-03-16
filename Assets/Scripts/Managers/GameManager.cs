@@ -5,18 +5,28 @@ using UnityEngine;
 //this handles the game logic
 public class GameManager : MonoBehaviour
 {
+    
     public int PlayerTurn = 0;
-    public bool GameEnded = false;
     public int Day = 1;
     public List<Player> Players;
+    public static event Action OnStateChange;
+    private EGameStates _gameState;
+    public EGameStates GameState { 
+        get { return _gameState; } 
+        set { _gameState = value;OnStateChange?.Invoke(); LastState = _gameState; }
+    }
+    public EGameStates LastState;
+
     private void Start()
     {
+        GameState = EGameStates.Idle;
         // Initialize players
         Players = new List<Player>
         {
-            new("Andrew",ETeamColors.Amber, ETeams.None, null),
-            new("Freya",ETeamColors.Azure, ETeams.A, null)
+            new("Andrew",EPlayerColors.Amber, ETeams.A, null),
+            new("Freya",EPlayerColors.Azure, ETeams.B, null)
         };
+        
     }
 
     private void Update()
@@ -38,4 +48,5 @@ public class GameManager : MonoBehaviour
         Day++;
         OnDayEnd?.Invoke();
     }
+    
 }

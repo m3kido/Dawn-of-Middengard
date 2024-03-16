@@ -1,4 +1,4 @@
-public enum ETeamColors
+public enum EPlayerColors
 {
     Amber,
     Azure,

@@ -5,9 +5,10 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Unit : MonoBehaviour
-{ 
+{
     MapManager Mm;
     UnitManager Um;
+    SpriteRenderer rend;
 
     public UnitData Data;
     public int Health = 10;
@@ -16,19 +17,43 @@ public class Unit : MonoBehaviour
     public int Owner;
 
     public bool IsMoving = false;
-    public bool HasMoved = false; 
+    private bool _hasMoved;
+    public bool HasMoved
+    {
+        get
+        {
+            return _hasMoved;
+        }
+        set
+        {
+            _hasMoved = value;
+            if (_hasMoved)
+            {
+                rend.color = Color.gray;
+            }
+            else
+            {
+                rend.color = Color.white;
+            }
+        }
+    }
     
     // Dictionart to hold the grid position of the valid tiles along with the fuel consumed to reach them
     
     public Dictionary<Vector3Int, int> ValidTiles = new();
 
-    void Start()
+    void Awake()
+    {
+        rend = GetComponent<SpriteRenderer>();
+        HasMoved = false;
+    }
+    private void Start()
     {
         // Get map and unit manager from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
         Um = FindAnyObjectByType<UnitManager>();
+        
     }
-
     // Highlight the accessible tiles to the unit
     public void HighlightTiles()
     {
@@ -132,11 +157,6 @@ public class Unit : MonoBehaviour
         SeekTile(right, CurrFuel);
     }
     
-    // Assert the unit has moved
-    public void MarkMoved()
-    {
-        HasMoved = true;
-    }
 
 }
 

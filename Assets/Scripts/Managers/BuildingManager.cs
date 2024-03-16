@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
@@ -41,6 +39,14 @@ public class BuildingManager : MonoBehaviour
         ScanMapForBuildings();
 
     }
+    private void OnEnable()
+    {
+        GameManager.OnDayEnd += AddGold;
+    }
+    private void OnDisable()
+    {
+        GameManager.OnDayEnd -= AddGold;
+    }
 
     // Scan the map and put all the buldings in the _buildings dictionary
     private void ScanMapForBuildings()
@@ -49,6 +55,7 @@ public class BuildingManager : MonoBehaviour
         foreach (var pos in Mm.Map.cellBounds.allPositionsWithin)
         {
             TileData posTile = Mm.GetTileData(pos);
+
 
             if (posTile != null && posTile.TileType == ETileTypes.Building)
             {
@@ -78,13 +85,26 @@ public class BuildingManager : MonoBehaviour
 
     public void SpawnUnit(EUnitType unitType, Building building, int owner)
     {
+
         Unit newUnit = Instantiate<Unit>(_unitPrefabs[(int)unitType], building.Position, Quaternion.identity);
         newUnit.Owner = owner;
         newUnit.HasMoved = true;
         //outline this mf
         if (newUnit == null) { print("d");return; }
         Um.Units.Add(newUnit);
-        
+
+    }
+    private void AddGold()
+    {
+        foreach (var building in Buildings.Values)
+        {
+            if(building.Owner < 4)
+            {
+                Gm.Players[building.Owner].Gold += 1000;
+            }
+           
+        }
+
     }
 
 }

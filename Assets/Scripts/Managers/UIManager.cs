@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,16 +16,36 @@ public class UIManager : MonoBehaviour
     //captain bar
 
     //building menu
-
+    GameManager Gm;
+    [SerializeField]
+    private GameObject ActionMenu;
     // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        
+        GameManager.OnStateChange += ChangeActiveUI;
+    }
+    private void OnDisable()
+    {
+        GameManager.OnStateChange -= ChangeActiveUI;
+    }
+    void Awake()
+    {
+        Gm=FindAnyObjectByType<GameManager>();
+        ActionMenu.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void ChangeActiveUI()
     {
+        switch (Gm.LastState)
+        {
+            case EGameStates.ActionMenu: { ActionMenu.SetActive(false); break; }
+            default: { break; }
+        }
+        switch (Gm.GameState)
+        {
+            case EGameStates.ActionMenu: { ActionMenu.SetActive(true); break; }
+            default: { break; }
+        }
         
     }
 }
