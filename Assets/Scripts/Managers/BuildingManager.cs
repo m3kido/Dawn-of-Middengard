@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
 public class BuildingManager : MonoBehaviour
@@ -11,8 +12,7 @@ public class BuildingManager : MonoBehaviour
     GameManager Gm;
 
 
-    [SerializeField]
-    private List<Unit> UnitPrefabs;
+    [FormerlySerializedAs("UnitPrefabs")] [SerializeField] private List<Unit> _unitPrefabs;
     private Dictionary<Tile, BuildingData> _buildingTileData;
     [SerializeField] private BuildingData[] _buildingDatas;
 
@@ -48,16 +48,14 @@ public class BuildingManager : MonoBehaviour
         Buildings = new Dictionary<Vector3Int, Building>();
         foreach (var pos in Mm.Map.cellBounds.allPositionsWithin)
         {
-            TileData PosTile = Mm.GetTileData(pos);
+            TileData posTile = Mm.GetTileData(pos);
 
-            if (PosTile != null && PosTile.TileType == ETileTypes.Building)
+            if (posTile != null && posTile.TileType == ETileTypes.Building)
+            {
+                BuildingData currData = _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
+                Buildings.Add(pos, new Building(pos, currData.BuildingType, (int)currData.Color));
 
-                if (PosTile != null && PosTile.TileType == ETileTypes.Building)
-                {
-                    BuildingData CurrData = _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
-                    Buildings.Add(pos, new Building(pos, CurrData.BuildingType, (int)CurrData.Color));
-
-                }
+            }
         }
     }
 
@@ -78,14 +76,14 @@ public class BuildingManager : MonoBehaviour
         }
     }
 
-    public void SpawnUnit(EUnits UnitType, Building building, int Owner)
+    public void SpawnUnit(EUnitType unitType, Building building, int owner)
     {
-        Unit NewUnit = Instantiate<Unit>(UnitPrefabs[(int)UnitType], building.Position, Quaternion.identity);
-        NewUnit.Owner = Owner;
-        NewUnit.HasMoved = true;
+        Unit newUnit = Instantiate<Unit>(_unitPrefabs[(int)unitType], building.Position, Quaternion.identity);
+        newUnit.Owner = owner;
+        newUnit.HasMoved = true;
         //outline this mf
-        if (NewUnit == null) { print("d");return; }
-        Um.Units.Add(NewUnit);
+        if (newUnit == null) { print("d");return; }
+        Um.Units.Add(newUnit);
         
     }
 

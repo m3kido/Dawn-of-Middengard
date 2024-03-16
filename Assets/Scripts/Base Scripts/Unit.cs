@@ -116,7 +116,7 @@ public class Unit : MonoBehaviour
                 } else { return; }
             }
         }
-         else return;
+        else return;
         
        
         // Explore the nighbouring tiles

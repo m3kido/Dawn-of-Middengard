@@ -9,5 +9,5 @@ public class BuildingData : ScriptableObject
     public Tile Building;
     public ETeamColors Color;
     public EBuildings BuildingType;
-    public List<EUnits> DeployableUnits;
+    public List<EUnitType> DeployableUnits;
 }

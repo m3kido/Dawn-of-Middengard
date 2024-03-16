@@ -167,7 +167,7 @@ public class CursorController : MonoBehaviour
             {
                 if (Bm.Buildings.ContainsKey(HoverTile))
                 {
-                    Bm.SpawnUnit(EUnits.Knight, Bm.Buildings[HoverTile], Gm.PlayerTurn);
+                    Bm.SpawnUnit(EUnitType.Infantry, Bm.Buildings[HoverTile], Gm.PlayerTurn);
                 }
             }
         }
