@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     private EGameStates _gameState;
     public EGameStates GameState { 
         get { return _gameState; } 
-        set { _gameState = value;OnStateChange?.Invoke(); LastState = _gameState; }
+        set {  _gameState = value;OnStateChange?.Invoke(); LastState = _gameState; }
     }
     public EGameStates LastState;
 

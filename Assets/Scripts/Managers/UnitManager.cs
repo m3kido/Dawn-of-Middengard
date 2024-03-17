@@ -115,15 +115,20 @@ public class UnitManager : MonoBehaviour
     // Move the selected unit
     public IEnumerator MoveUnit()
     {
+        
         SelectedUnit.IsMoving = true;
         SelectedUnit.ResetTiles();
         UnDrawPath();
+        
         foreach (var pos in Path)
         {
             SelectedUnit.transform.position = pos;
-            yield return new WaitForSecondsRealtime(0.08f);
+            yield return new WaitForSeconds(0.08f) ;
+
         }
+        yield return 1f;
         SelectedUnit.IsMoving = false;
+        
         Gm.GameState = EGameStates.ActionMenu;
       
     }

@@ -3347,6 +3347,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b27096ab653ee24f890a3dd49e85cde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Cursor: {fileID: 0}
   Options: {fileID: 1108215501}
   WaitOption: {fileID: 3687537325547011197, guid: d52b9603af9e0c349ab8941dbef25a9f, type: 3}
 --- !u!1 &1896815360

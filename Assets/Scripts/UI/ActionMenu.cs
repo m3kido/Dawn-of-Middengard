@@ -1,8 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ActionMenu : MonoBehaviour
 {
@@ -10,11 +10,18 @@ public class ActionMenu : MonoBehaviour
     GameManager Gm;
     UnitManager Um;
     BuildingManager Bm;
+
+    public Sprite Cursor;
     public GameObject Options;
     List<GameObject> OptionsList;
-    GameObject SelectedOption;
+    int SelectedOption;
 
     public GameObject WaitOption;
+    //public GameObject FireOption;
+    // public GameObject CaptureOption;
+
+    private GameObject WaitOptionInstance;
+    private GameObject WaitOptionInstance2;
     //public GameObject FireOption;
     // public GameObject CaptureOption;
     private void Awake()
@@ -24,16 +31,24 @@ public class ActionMenu : MonoBehaviour
         Gm = FindAnyObjectByType<GameManager>();
         Bm = FindAnyObjectByType<BuildingManager>();
         OptionsList = new List<GameObject>();
+
+        WaitOptionInstance = Instantiate(WaitOption, Options.transform);
+        WaitOptionInstance.SetActive(false);
+        WaitOptionInstance2 = Instantiate(WaitOption, Options.transform);
+        WaitOptionInstance2.SetActive(false);
+
     }
     private void OnEnable()
     {
- 
+        if (Bm.Buildings == null) { return; }
         CalculateOptions();
-        
+
     }
     private void OnDisable()
     {
-        foreach (GameObject option in OptionsList) { Destroy(option); }
+        if(OptionsList.Count == 0) { return; }
+        OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.clear;
+        foreach (GameObject option in OptionsList) { option.SetActive(false); }
         OptionsList.Clear();
     }
     void Update()
@@ -42,20 +57,33 @@ public class ActionMenu : MonoBehaviour
         {
             Gm.GameState = EGameStates.Selecting;
             Um.SelectedUnit.transform.position = Cc.SaveTile;
-            if(Um.Path.Count!=0) {
+            if (Um.Path.Count != 0)
+            {
                 Cc.HoverTile = Um.Path.Last();
             }
-            
+
             Um.SelectUnit(Um.SelectedUnit);
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-          
-            if(SelectedOption == WaitOption)
+
+            if (OptionsList[SelectedOption].name.Contains("Wait"))
             {
                 Um.EndMove();
-                Gm.GameState= EGameStates.Idle;
+                Gm.GameState = EGameStates.Idle;
             }
+        }
+        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.clear;
+            SelectedOption = (SelectedOption - 1 + OptionsList.Count) % OptionsList.Count;
+            OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.clear;
+            SelectedOption = (SelectedOption + 1 ) % OptionsList.Count;
+            OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
         }
 
 
@@ -63,30 +91,42 @@ public class ActionMenu : MonoBehaviour
     }
     private void CalculateOptions()
     {
-      
+
         //CheckFire();
         CheckCapture();
-        
-    }
-  /* private void CheckFire()
-    {
-        if (Um.SelectedUnit.CanAttack())
+        WaitOptionInstance2.SetActive(true);
+        OptionsList.Add(WaitOptionInstance2);
+
+        if (OptionsList.Count > 0)
         {
-            OptionsList.Add(FireOption);
+            SelectedOption = 0;
+            OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
+
         }
-    }*/
+
+    }
+    /* private void CheckFire()
+      {
+          if (Um.SelectedUnit.CanAttack())
+          {
+              OptionsList.Add(FireOption);
+          }
+      }*/
     private void CheckCapture()
     {
-        if(Bm.Buildings == null) { return; }
-        var building = Bm.Buildings.ContainsKey(Cc.HoverTile)? Bm.Buildings[Cc.HoverTile]:null;
-        if (building != null && building.Owner != Gm.PlayerTurn ) {
-          //OptionsList.Add( Instantiate(CaptureOption, Options.transform));
+        if (Bm.Buildings == null) { return; }
+        var building = Bm.Buildings.ContainsKey(Cc.HoverTile) ? Bm.Buildings[Cc.HoverTile] : null;
+        if (building != null && building.Owner != Gm.PlayerTurn)
+        {
+            //OptionsList.Add( Instantiate(CaptureOption, Options.transform));
         }
         else
         {
-            OptionsList.Add(  Instantiate(WaitOption, Options.transform));
-            if (OptionsList.Count == 1) { SelectedOption = WaitOption; }
+            WaitOptionInstance.SetActive(true);
+            OptionsList.Add(WaitOptionInstance);
+
+
         }
-       
+
     }
 }

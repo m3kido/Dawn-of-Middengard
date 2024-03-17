@@ -31,11 +31,15 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         Gm=FindAnyObjectByType<GameManager>();
+        
+    }
+    private void Start()
+    {
         ActionMenu.SetActive(false);
     }
-
     private void ChangeActiveUI()
     {
+       
         switch (Gm.LastState)
         {
             case EGameStates.ActionMenu: { ActionMenu.SetActive(false); break; }
@@ -43,7 +47,7 @@ public class UIManager : MonoBehaviour
         }
         switch (Gm.GameState)
         {
-            case EGameStates.ActionMenu: { ActionMenu.SetActive(true); break; }
+            case EGameStates.ActionMenu: {  ActionMenu.SetActive(true); break; }
             default: { break; }
         }
         
