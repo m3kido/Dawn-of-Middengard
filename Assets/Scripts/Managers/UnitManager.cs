@@ -133,7 +133,16 @@ public class UnitManager : MonoBehaviour
     private void ResetUnits()
     {
         foreach(var unit in Units) {
-            unit.HasMoved= false;
+            unit.HasMoved=false;
         }
+    }
+
+    public void EndMove()
+    {
+        SelectedUnit.Fuel -= PathCost;
+        Path.Clear();
+        PathCost = 0;
+        SelectedUnit.HasMoved = true;
+        SelectedUnit = null;
     }
 }

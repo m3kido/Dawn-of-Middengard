@@ -5,20 +5,60 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class Unit : MonoBehaviour
-{ 
-    MapManager Mm;
-    UnitManager Um;
+{
+    protected MapManager Mm;
+    protected UnitManager Um;
+    protected GameManager Gm;
+    protected SpriteRenderer rend;
 
     public UnitData Data;
-    public int Health = 10;
+    public int _health = 10;
     public int Fuel = 100;
     public bool IsSelected = false;
     public int Owner;
 
+    public EUnitType Type;
+
     public bool IsMoving = false;
-    public bool HasMoved = false; 
+    private bool _hasMoved;
+    public bool HasMoved
+    {
+        get
+        {
+            return _hasMoved;
+        }
+        set
+        {
+            _hasMoved = value;
+            if (_hasMoved)
+            {
+                rend.color = Color.gray;
+            }
+            else
+            {
+                rend.color = Color.white;
+            }
+        }
+    }
+
+    public int Health
+    {
+        get
+        {
+            return _health;
+        }
+
+        set
+        {
+            if (value <= 0) 
+            {
+                // MAKE UNIT DEAD!
+            }
+            else _health=value;
+        }
+    }
     
-    // Dictionart to hold the grid position of the valid tiles along with the fuel consumed to reach them
+    // Dictionary to hold the grid position of the valid tiles along with the fuel consumed to reach them
     
     public Dictionary<Vector3Int, int> ValidTiles = new();
 
@@ -27,8 +67,9 @@ public class Unit : MonoBehaviour
         // Get map and unit manager from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
         Um = FindAnyObjectByType<UnitManager>();
+        Gm = FindAnyObjectByType<GameManager>();
+        
     }
-
     // Highlight the accessible tiles to the unit
     public void HighlightTiles()
     {
