@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -2253911629886400664, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
       propertyPath: m_Name
-      value: knight-idle
+      value: Infantry
       objectReference: {fileID: 0}
     - target: {fileID: 3626916397498700004, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
       propertyPath: m_SortingOrder
@@ -86,10 +86,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: 377aff6a34101e841bb51303d0cf5623, type: 2}
-  Fuel: 100
+  Health: 100
+  Provisions: 99
   IsSelected: 0
-  MoveRange: 3
-  TeamSide: 0
   Owner: 0
   IsMoving: 0
-  HasMoved: 0

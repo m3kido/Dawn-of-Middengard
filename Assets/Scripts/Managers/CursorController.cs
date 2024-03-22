@@ -33,7 +33,7 @@ public class CursorController : MonoBehaviour
     void Update()
     {
         // Handle input every frame
-        if(Gm.GameState==EGameStates.Idle || Gm.GameState==EGameStates.Selecting) {
+        if(Gm.GameState==EPlayerStates.Idle || Gm.GameState==EPlayerStates.Selecting) {
             HandleInput();
         }
         
@@ -100,8 +100,8 @@ public class CursorController : MonoBehaviour
                 if (index < 0)
                 {
                     // Add tile to path
-                    int cost = Mm.GetTileData(Mm.Map.GetTile<Tile>(HoverTile + offset)).FuelCost;
-                    if (Um.PathCost + cost > Um.SelectedUnit.Fuel) { return; }
+                    int cost = Mm.GetTileData(Mm.Map.GetTile<Tile>(HoverTile + offset)).ProvisionsCost;
+                    if (Um.PathCost + cost > Um.SelectedUnit.Provisions) { return; }
                     Um.UnDrawPath();
                     Um.Path.Add(HoverTile + offset);
                     Um.PathCost += cost;
@@ -116,7 +116,7 @@ public class CursorController : MonoBehaviour
                     Um.PathCost = 0;
                     foreach (Vector3Int pos in Um.Path)
                     {
-                        Um.PathCost += Mm.GetTileData(Mm.Map.GetTile<Tile>(pos)).FuelCost;
+                        Um.PathCost += Mm.GetTileData(Mm.Map.GetTile<Tile>(pos)).ProvisionsCost;
                     }
 
                 }
@@ -130,7 +130,7 @@ public class CursorController : MonoBehaviour
     private void XClicked()
     {
       
-            if(Gm.GameState== EGameStates.Selecting) {
+            if(Gm.GameState== EPlayerStates.Selecting) {
                     // Cancel select
                     HoverTile = Mm.Map.WorldToCell(Um.SelectedUnit.transform.position);
                     Um.DeselectUnit();
@@ -173,7 +173,7 @@ public class CursorController : MonoBehaviour
             {
                 if (Bm.Buildings.ContainsKey(HoverTile))
                 {
-                    Bm.SpawnUnit(EUnitType.Infantry, Bm.Buildings[HoverTile], Gm.PlayerTurn);
+                    Bm.SpawnUnit(EUnits.Infantry, Bm.Buildings[HoverTile], Gm.PlayerTurn);
                 }
             }
         }

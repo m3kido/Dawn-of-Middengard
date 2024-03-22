@@ -61,7 +61,7 @@ public class UnitManager : MonoBehaviour
     public bool IsObstacle(Vector3Int pos, Unit unit)
     {
         Unit tileUnit = FindUnit(pos);
-        if (!unit.Data.IsWalkable(Mm.GetTileData(pos).TileType)) { return true; }
+        if (!unit.Data.IsWalkable(Mm.GetTileData(pos).TerrainName)) { return true; }
         if (tileUnit != null && Gm.Players[tileUnit.Owner].TeamSide != Gm.Players[unit.Owner].TeamSide) { return true; }
         return false;
     }
@@ -98,7 +98,7 @@ public class UnitManager : MonoBehaviour
         SelectedUnit = unit;
         SelectedUnit.HighlightTiles();
         DrawPath();
-        Gm.GameState = EGameStates.Selecting;
+        Gm.GameState = EPlayerStates.Selecting;
     }
 
     // Deselect the selected unit
@@ -109,7 +109,7 @@ public class UnitManager : MonoBehaviour
         SelectedUnit = null;
         Path.Clear();
         PathCost = 0;
-        Gm.GameState = EGameStates.Idle;
+        Gm.GameState = EPlayerStates.Idle;
     }
 
     // Move the selected unit
@@ -129,7 +129,7 @@ public class UnitManager : MonoBehaviour
         yield return 1f;
         SelectedUnit.IsMoving = false;
         
-        Gm.GameState = EGameStates.ActionMenu;
+        Gm.GameState = EPlayerStates.InActionsMenu;
       
     }
     
@@ -142,7 +142,7 @@ public class UnitManager : MonoBehaviour
     }
     public void EndMove()
     {
-        SelectedUnit.Fuel -= PathCost;
+        SelectedUnit.Provisions -= PathCost;
         Path.Clear();
         PathCost = 0;
         SelectedUnit.HasMoved = true;

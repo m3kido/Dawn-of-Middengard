@@ -10,9 +10,9 @@ public class Unit : MonoBehaviour
     UnitManager Um;
     SpriteRenderer rend;
 
-    public UnitData Data;
-    public int Health = 10;
-    public int Fuel = 100;
+    public UnitDataSO Data;
+    public int Health;
+    public int Provisions;
     public bool IsSelected = false;
     public int Owner;
 
@@ -37,14 +37,15 @@ public class Unit : MonoBehaviour
             }
         }
     }
-    
-    // Dictionart to hold the grid position of the valid tiles along with the fuel consumed to reach them
-    
+
+    // Dictionary to hold the grid position of the valid tiles along with the fuel consumed to reach them
     public Dictionary<Vector3Int, int> ValidTiles = new();
 
     void Awake()
     {
         rend = GetComponent<SpriteRenderer>();
+        Health = 100;
+        Provisions = Data.MaxProvisions;
         HasMoved = false;
     }
     private void Start()
@@ -52,7 +53,7 @@ public class Unit : MonoBehaviour
         // Get map and unit manager from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
         Um = FindAnyObjectByType<UnitManager>();
-        
+
     }
     // Highlight the accessible tiles to the unit
     public void HighlightTiles()
@@ -64,23 +65,24 @@ public class Unit : MonoBehaviour
 
         // WorlToCell takes a float postion and converts it to grid position
         Vector3Int startPos = Mm.Map.WorldToCell(transform.position);
-        
-        // you can find SeekTile() just below
+
+        // You can find SeekTile() just below
         SeekTile(startPos, -1);
-        
+
         foreach (var pos in ValidTiles.Keys)
         {
-            if (ValidTiles[pos] <= Fuel) {
+            if (ValidTiles[pos] <= Provisions)
+            {
                 Mm.Map.SetTileFlags(pos, TileFlags.None);
                 Mm.HighlightTile(pos);
             }
             else
             {
                 ValidTiles.Remove(pos);
-            } 
+            }
         }
     }
-   
+
     // Unhighlight the accessible tiles to the unit
     public void ResetTiles()
     {
@@ -96,7 +98,7 @@ public class Unit : MonoBehaviour
     private bool InBounds(Vector3Int pos)
     {
         // Manhattan distance : |x1 - x2| + |y1 - y2|
-        if (Mathf.Abs(Mm.Map.WorldToCell(transform.position).x - pos.x) + Mathf.Abs(Mm.Map.WorldToCell(transform.position).y - pos.y) <=Data.MoveRange)
+        if (Mathf.Abs(Mm.Map.WorldToCell(transform.position).x - pos.x) + Mathf.Abs(Mm.Map.WorldToCell(transform.position).y - pos.y) <= Data.MoveRange)
         {
             return true;
         }
@@ -107,46 +109,47 @@ public class Unit : MonoBehaviour
     // A recursive function to fill the ValidTiles dictionary
     private void SeekTile(Vector3Int current, int CurrFuel)
     {
-        
+
         // Access the current tile
         Tile currTile = Mm.Map.GetTile<Tile>(current);
-        if(currTile == null ) { return; }
-       
+        if (currTile == null) { return; }
+
         if (CurrFuel < 0)
-        {  
+        {
             // Exception for the start tile
             CurrFuel = 0;
         }
         else
         {
             // Add the current tile fuel cost to the current fuel
-            CurrFuel += Mm.GetTileData(currTile).FuelCost;
+            CurrFuel += Mm.GetTileData(currTile).ProvisionsCost;
         }
-       
-        if (CurrFuel > Fuel ) { return; }
+
+        if (CurrFuel > Provisions) { return; }
 
         // If the current tile is not an obstacle and falls into the move range of the unit
         if (!Um.IsObstacle(current, this) && InBounds(current))
         {
             if (!ValidTiles.ContainsKey(current))
             {
-               ValidTiles.Add(current, CurrFuel);
+                ValidTiles.Add(current, CurrFuel);
             }
             else
             {
-                if(CurrFuel < ValidTiles[current])
+                if (CurrFuel < ValidTiles[current])
                 {
                     ValidTiles[current] = CurrFuel;
-                    
-                } else { return; }
+
+                }
+                else { return; }
             }
         }
         else return;
-        
-       
+
+
         // Explore the nighbouring tiles
         // Restrictions will be added so that we cant go out of the map
-        Vector3Int up = current+ Vector3Int.up;
+        Vector3Int up = current + Vector3Int.up;
         Vector3Int down = current + Vector3Int.down;
         Vector3Int left = current + Vector3Int.left;
         Vector3Int right = current + Vector3Int.right;
@@ -156,7 +159,7 @@ public class Unit : MonoBehaviour
         SeekTile(left, CurrFuel);
         SeekTile(right, CurrFuel);
     }
-    
+
 
 }
 

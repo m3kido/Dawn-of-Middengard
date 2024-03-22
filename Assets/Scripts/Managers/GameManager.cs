@@ -10,21 +10,21 @@ public class GameManager : MonoBehaviour
     public int Day = 1;
     public List<Player> Players;
     public static event Action OnStateChange;
-    private EGameStates _gameState;
-    public EGameStates GameState { 
+    private EPlayerStates _gameState;
+    public EPlayerStates GameState { 
         get { return _gameState; } 
         set {  _gameState = value;OnStateChange?.Invoke(); LastState = _gameState; }
     }
-    public EGameStates LastState;
+    public EPlayerStates LastState;
 
     private void Start()
     {
-        GameState = EGameStates.Idle;
+        GameState = EPlayerStates.Idle;
         // Initialize players
         Players = new List<Player>
         {
-            new("Andrew",EPlayerColors.Amber, ETeams.A, null),
-            new("Freya",EPlayerColors.Azure, ETeams.B, null)
+            new("Andrew",ETeamColors.Amber, ETeams.A, null),
+            new("Freya",ETeamColors.Azure, ETeams.B, null)
         };
         
     }

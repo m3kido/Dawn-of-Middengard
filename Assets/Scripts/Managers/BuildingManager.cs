@@ -11,8 +11,8 @@ public class BuildingManager : MonoBehaviour
 
 
     [FormerlySerializedAs("UnitPrefabs")] [SerializeField] private List<Unit> _unitPrefabs;
-    private Dictionary<Tile, BuildingData> _buildingTileData;
-    [SerializeField] private BuildingData[] _buildingDatas;
+    private Dictionary<Tile, BuildingDataSO> _buildingTileData;
+    [SerializeField] private BuildingDataSO[] _buildingDatas;
 
 
     public Dictionary<Vector3Int, Building> Buildings;
@@ -20,11 +20,11 @@ public class BuildingManager : MonoBehaviour
     // Get Building datas of every building type from the inspector
     private void Awake()
     {
-        _buildingTileData = new Dictionary<Tile, BuildingData>();
+        _buildingTileData = new Dictionary<Tile, BuildingDataSO>();
 
         foreach (var buildingData in _buildingDatas)
         {
-            _buildingTileData.Add(buildingData.Building, buildingData);
+            _buildingTileData.Add(buildingData.BuildingTile, buildingData);
         }
     }
 
@@ -54,20 +54,20 @@ public class BuildingManager : MonoBehaviour
         Buildings = new Dictionary<Vector3Int, Building>();
         foreach (var pos in Mm.Map.cellBounds.allPositionsWithin)
         {
-            TileData posTile = Mm.GetTileData(pos);
+            TerrainDataSO posTile = Mm.GetTileData(pos);
 
 
-            if (posTile != null && posTile.TileType == ETileTypes.Building)
+            if (posTile != null && posTile.TerrainName == ETerrains.Building)
             {
-                BuildingData currData = _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
-                Buildings.Add(pos, new Building(pos, currData.BuildingType, (int)currData.Color));
+                BuildingDataSO currData = _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
+                Buildings.Add(pos, new Building(pos, currData.BuildingName, (int)currData.Color));
 
             }
         }
     }
 
     // Get building data of given grid position
-    public BuildingData GetBuildingData(Vector3Int pos)
+    public BuildingDataSO GetBuildingData(Vector3Int pos)
     {
         return _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
     }
@@ -83,17 +83,16 @@ public class BuildingManager : MonoBehaviour
         }
     }
 
-    public void SpawnUnit(EUnitType unitType, Building building, int owner)
+    public void SpawnUnit(EUnits unitType, Building building, int owner)
     {
-
         Unit newUnit = Instantiate<Unit>(_unitPrefabs[(int)unitType], building.Position, Quaternion.identity);
         newUnit.Owner = owner;
         newUnit.HasMoved = true;
         //outline this mf
-        if (newUnit == null) { print("d");return; }
+        if (newUnit == null) { print("d");  return; }
         Um.Units.Add(newUnit);
-
     }
+
     private void AddGold()
     {
         foreach (var building in Buildings.Values)
@@ -104,7 +103,5 @@ public class BuildingManager : MonoBehaviour
             }
            
         }
-
     }
-
 }

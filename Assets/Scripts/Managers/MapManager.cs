@@ -11,19 +11,19 @@ public class MapManager : MonoBehaviour
     public Tilemap Bordermap;
     public Tilemap ArrowMap;
 
-    [SerializeField] private List<TileData> _tileDatas;
+    [SerializeField] private List<TerrainDataSO> _tileDatas;
     [SerializeField] private AnimatedTile _highlightedTile;
     [SerializeField] private RuleTile _borderedTile;
     [SerializeField] private Tile[] _arrowTiles;
 
-    private Dictionary<Tile, TileData> _dataFromTile = new Dictionary<Tile, TileData>();
+    private Dictionary<Tile, TerrainDataSO> _dataFromTile = new Dictionary<Tile, TerrainDataSO>();
     
     // Get tile datas of every tile type from the inspector
     private void Awake()
     {
         foreach (var tileData in _tileDatas)
         {
-            foreach(var tile in tileData.Tiles) 
+            foreach(var tile in tileData.TerrainsOfSameType) 
             {
                 _dataFromTile.Add(tile, tileData);
             }
@@ -31,13 +31,13 @@ public class MapManager : MonoBehaviour
     }
 
     // Get data of given tile
-    public TileData GetTileData(Tile tile)
+    public TerrainDataSO GetTileData(Tile tile)
     {
         return _dataFromTile[tile];
     }
 
     // Get data of given grid position - Overloading GetTileData()
-    public TileData GetTileData(Vector3Int Pos)
+    public TerrainDataSO GetTileData(Vector3Int Pos)
     {
         var tile = Map.GetTile<Tile>(Pos);
         if (tile == null) { return null; }
