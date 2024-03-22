@@ -84,7 +84,7 @@ public class CursorManager : MonoBehaviour
             // Undraw the path if we get back the start point
             if (Um.SelectedUnit.transform.position == HoverTile + offset)
             {
-                Um.UnDrawPath();
+                Um.UndrawPath();
                 Um.Path.Clear();
                 Um.PathCost = 0;
             }
@@ -96,14 +96,14 @@ public class CursorManager : MonoBehaviour
                     // Add tile to path
                     int cost = Mm.GetTileData(Mm.Map.GetTile<Tile>(HoverTile + offset)).ProvisionsCost;
                     if (Um.PathCost + cost > Um.SelectedUnit.Provisions) { return; }
-                    Um.UnDrawPath();
+                    Um.UndrawPath();
                     Um.Path.Add(HoverTile + offset);
                     Um.PathCost += cost;
                 }
                 else
                 {
                     // Remove the arrow loop
-                    Um.UnDrawPath();
+                    Um.UndrawPath();
                     Um.Path.RemoveRange(index + 1, Um.Path.Count - index - 1);
 
                     // Recalculate the new provisions cost

@@ -4,6 +4,7 @@ using UnityEngine.Tilemaps;
 
 public class MapManager : MonoBehaviour
 {
+    // Access to different tilemaps
     public Tilemap Map;
     public Tilemap HighlightMap;
     public Tilemap Bordermap;

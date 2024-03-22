@@ -107,37 +107,37 @@ public class Unit : MonoBehaviour
 
 
     // A recursive function to fill the ValidTiles dictionary
-    private void SeekTile(Vector3Int current, int CurrFuel)
+    private void SeekTile(Vector3Int currentPosition, int currentProvisions)
     {
         // Access the current tile
-        Tile currTile = Mm.Map.GetTile<Tile>(current);
+        Tile currTile = Mm.Map.GetTile<Tile>(currentPosition);
         if (currTile == null) { return; }
 
-        if (CurrFuel < 0)
+        if (currentProvisions < 0)
         {
             // Exception for the start tile
-            CurrFuel = 0;
+            currentProvisions = 0;
         }
         else
         {
             // Add the current tile fuel cost to the current fuel
-            CurrFuel += Mm.GetTileData(currTile).ProvisionsCost;
+            currentProvisions += Mm.GetTileData(currTile).ProvisionsCost;
         }
 
-        if (CurrFuel > Provisions) { return; }
+        if (currentProvisions > Provisions) { return; }
 
         // If the current tile is not an obstacle and falls into the move range of the unit
-        if (!Um.IsObstacle(current, this) && InBounds(current))
+        if (!Um.IsObstacle(currentPosition, this) && InBounds(currentPosition))
         {
-            if (!ValidTiles.ContainsKey(current))
+            if (!ValidTiles.ContainsKey(currentPosition))
             {
-                ValidTiles.Add(current, CurrFuel);
+                ValidTiles.Add(currentPosition, currentProvisions);
             }
             else
             {
-                if (CurrFuel < ValidTiles[current])
+                if (currentProvisions < ValidTiles[currentPosition])
                 {
-                    ValidTiles[current] = CurrFuel;
+                    ValidTiles[currentPosition] = currentProvisions;
 
                 }
                 else { return; }
@@ -148,15 +148,15 @@ public class Unit : MonoBehaviour
 
         // Explore the nighbouring tiles
         // Restrictions will be added so that we cant go out of the map
-        Vector3Int up = current + Vector3Int.up;
-        Vector3Int down = current + Vector3Int.down;
-        Vector3Int left = current + Vector3Int.left;
-        Vector3Int right = current + Vector3Int.right;
+        Vector3Int up = currentPosition + Vector3Int.up;
+        Vector3Int down = currentPosition + Vector3Int.down;
+        Vector3Int left = currentPosition + Vector3Int.left;
+        Vector3Int right = currentPosition + Vector3Int.right;
 
-        SeekTile(up, CurrFuel);
-        SeekTile(down, CurrFuel);
-        SeekTile(left, CurrFuel);
-        SeekTile(right, CurrFuel);
+        SeekTile(up, currentProvisions);
+        SeekTile(down, currentProvisions);
+        SeekTile(left, currentProvisions);
+        SeekTile(right, currentProvisions);
     }
 }
 

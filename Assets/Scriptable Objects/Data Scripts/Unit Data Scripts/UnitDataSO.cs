@@ -11,8 +11,8 @@ public abstract class UnitDataSO : ScriptableObject
     public int Cost;
     public List<ETerrains> WalkableTerrains;
 
-    public bool IsWalkable(ETerrains tile)
+    public bool IsWalkable(ETerrains terrain)
     {
-        return WalkableTerrains.Contains(tile);
+        return WalkableTerrains.Contains(terrain);
     }
 }

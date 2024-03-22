@@ -7,6 +7,10 @@ using UnityEngine;
 // keeps track of units and the path drawn by the cursor
 public class UnitManager : MonoBehaviour
 {
+    // Managers will be needed
+    GameManager Gm;
+    MapManager Mm;
+
     // Array of units
     public List<Unit> Units;
 
@@ -14,9 +18,6 @@ public class UnitManager : MonoBehaviour
     public Vector3Int SaveTile;
     public List<Vector3Int> Path = new();
     public int PathCost = 0;
-
-    GameManager Gm;
-    MapManager Mm;
     
     void Start()
     {
@@ -80,7 +81,7 @@ public class UnitManager : MonoBehaviour
     }
 
     // Undraw the arrow path
-    public void UnDrawPath()
+    public void UndrawPath()
     {
         foreach (var pos in Path)
         {
@@ -101,7 +102,7 @@ public class UnitManager : MonoBehaviour
     public void DeselectUnit()
     {
         SelectedUnit.ResetTiles();
-        UnDrawPath();
+        UndrawPath();
         SelectedUnit = null;
         Path.Clear();
         PathCost = 0;
@@ -114,7 +115,7 @@ public class UnitManager : MonoBehaviour
         
         SelectedUnit.IsMoving = true;
         SelectedUnit.ResetTiles();
-        UnDrawPath();
+        UndrawPath();
         
         foreach (var pos in Path)
         {
