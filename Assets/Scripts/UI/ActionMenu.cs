@@ -55,7 +55,7 @@ public class ActionMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.X))
         {
-            Gm.CurrentPlayerState = EPlayerStates.Selecting;
+            Gm.CurrentStateOfPlayer = EPlayerStates.Selecting;
             Um.SelectedUnit.transform.position = Cc.SaveTile;
             if (Um.Path.Count != 0)
             {
@@ -70,7 +70,7 @@ public class ActionMenu : MonoBehaviour
             if (OptionsList[SelectedOption].name.Contains("Wait"))
             {
                 Um.EndMove();
-                Gm.CurrentPlayerState = EPlayerStates.Idle;
+                Gm.CurrentStateOfPlayer = EPlayerStates.Idle;
             }
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))

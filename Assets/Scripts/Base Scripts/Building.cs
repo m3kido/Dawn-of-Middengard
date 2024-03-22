@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// We have to discuss this 
 public class Building 
 {  
     public Vector3Int Position;

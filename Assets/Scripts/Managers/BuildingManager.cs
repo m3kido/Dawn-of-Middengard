@@ -47,11 +47,13 @@ public class BuildingManager : MonoBehaviour
 
     private void OnEnable()
     {
+        // GetGoldFromBuildings subscribes to day end event
         GameManager.OnDayEnd += GetGoldFromBuildings;
     }
 
     private void OnDisable()
     {
+        // GetGoldFromBuildings unsubscribes from day end event
         GameManager.OnDayEnd -= GetGoldFromBuildings;
     }
 
@@ -93,7 +95,7 @@ public class BuildingManager : MonoBehaviour
         Unit newUnit = Instantiate<Unit>(_unitPrefabs[(int)unitType], building.Position, Quaternion.identity);
         newUnit.Owner = owner;
         newUnit.HasMoved = true;
-        if (newUnit == null) { print("d");  return; }
+        if (newUnit == null) { print("d"); return; }
         Um.Units.Add(newUnit);
     }
 
@@ -102,7 +104,8 @@ public class BuildingManager : MonoBehaviour
     {
         foreach (var building in Buildings.Values)
         {
-            if(building.Owner < 4)
+            // MODIFICATION NEEDED: We have tp check whether the building can provide gold or not (only villages can)
+            if (building.Owner < 4)
             {
                 Gm.Players[building.Owner].Gold += 1000;
             }

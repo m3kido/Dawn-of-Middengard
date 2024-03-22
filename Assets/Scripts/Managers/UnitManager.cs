@@ -94,7 +94,7 @@ public class UnitManager : MonoBehaviour
         SelectedUnit = unit;
         SelectedUnit.HighlightTiles();
         DrawPath();
-        Gm.CurrentPlayerState = EPlayerStates.Selecting;
+        Gm.CurrentStateOfPlayer = EPlayerStates.Selecting;
     }
 
     // Deselect the selected unit
@@ -105,7 +105,7 @@ public class UnitManager : MonoBehaviour
         SelectedUnit = null;
         Path.Clear();
         PathCost = 0;
-        Gm.CurrentPlayerState = EPlayerStates.Idle;
+        Gm.CurrentStateOfPlayer = EPlayerStates.Idle;
     }
 
     // Move the selected unit
@@ -125,7 +125,7 @@ public class UnitManager : MonoBehaviour
         yield return 1f;
         SelectedUnit.IsMoving = false;
         
-        Gm.CurrentPlayerState = EPlayerStates.InActionsMenu;
+        Gm.CurrentStateOfPlayer = EPlayerStates.InActionsMenu;
       
     }
     

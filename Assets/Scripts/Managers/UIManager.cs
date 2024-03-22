@@ -36,12 +36,12 @@ public class UIManager : MonoBehaviour
     private void ChangeActiveUI()
     {
        
-        switch (Gm.LastState)
+        switch (Gm.LastStateOfPlayer)
         {
             case EPlayerStates.InActionsMenu: { ActionMenu.SetActive(false); break; }
             default: { break; }
         }
-        switch (Gm.CurrentPlayerState)
+        switch (Gm.CurrentStateOfPlayer)
         {
             case EPlayerStates.InActionsMenu: {  ActionMenu.SetActive(true); break; }
             default: { break; }

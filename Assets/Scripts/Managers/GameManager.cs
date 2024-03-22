@@ -9,17 +9,18 @@ public class GameManager : MonoBehaviour
     public int Day = 1;
     public List<Player> Players;
     public static event Action OnStateChange;
-    private EPlayerStates _currentPlayerState;
-    public EPlayerStates LastState;
+    private EPlayerStates _currentStateOfPlayer;
+    public EPlayerStates LastStateOfPlayer;
 
-    public EPlayerStates CurrentPlayerState { 
-        get { return _currentPlayerState; } 
-        set { _currentPlayerState = value; OnStateChange?.Invoke(); LastState = _currentPlayerState; }
+    // We have to discuss this
+    public EPlayerStates CurrentStateOfPlayer { 
+        get { return _currentStateOfPlayer; } 
+        set { _currentStateOfPlayer = value; OnStateChange?.Invoke(); LastStateOfPlayer = _currentStateOfPlayer; }
     }
 
     private void Start()
     {
-        CurrentPlayerState = EPlayerStates.Idle;
+        CurrentStateOfPlayer = EPlayerStates.Idle;
 
         // Initialize players
         Players = new List<Player>

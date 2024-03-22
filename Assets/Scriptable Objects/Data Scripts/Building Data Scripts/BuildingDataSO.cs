@@ -5,6 +5,6 @@ using UnityEngine.Tilemaps;
 public abstract class BuildingDataSO : ScriptableObject
 {
     public EBuildings BuildingType;
-    public Tile BuildingTile;
     public ETeamColors Color;
+    public Tile BuildingTile;
 }

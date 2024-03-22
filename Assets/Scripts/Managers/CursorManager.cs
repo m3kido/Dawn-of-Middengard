@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+// Class to manage the cursor
 public class CursorManager : MonoBehaviour
 {
     UnitManager Um;
@@ -21,16 +22,15 @@ public class CursorManager : MonoBehaviour
         Um = FindAnyObjectByType<UnitManager>();
         Mm = FindAnyObjectByType<MapManager>();
         Gm = FindAnyObjectByType<GameManager>();
-        Bm= FindAnyObjectByType<BuildingManager>();
+        Bm = FindAnyObjectByType<BuildingManager>();
     }
 
     void Update()
     {
         // Handle input every frame
-        if(Gm.CurrentPlayerState==EPlayerStates.Idle || Gm.CurrentPlayerState==EPlayerStates.Selecting) {
+        if(Gm.CurrentStateOfPlayer == EPlayerStates.Idle || Gm.CurrentStateOfPlayer == EPlayerStates.Selecting) {
             HandleInput();
         }
-        
     }
 
     void HandleInput()
@@ -102,17 +102,16 @@ public class CursorManager : MonoBehaviour
                 }
                 else
                 {
-                    // Remove the loop
+                    // Remove the arrow loop
                     Um.UnDrawPath();
                     Um.Path.RemoveRange(index + 1, Um.Path.Count - index - 1);
 
-                    // Recalculate the new fuel cost
+                    // Recalculate the new provisions cost
                     Um.PathCost = 0;
                     foreach (Vector3Int pos in Um.Path)
                     {
                         Um.PathCost += Mm.GetTileData(Mm.Map.GetTile<Tile>(pos)).ProvisionsCost;
                     }
-
                 }
             }
             Um.DrawPath();
@@ -124,7 +123,7 @@ public class CursorManager : MonoBehaviour
     private void XClicked()
     {
       
-            if(Gm.CurrentPlayerState== EPlayerStates.Selecting) {
+            if(Gm.CurrentStateOfPlayer== EPlayerStates.Selecting) {
                     // Cancel select
                     HoverTile = Mm.Map.WorldToCell(Um.SelectedUnit.transform.position);
                     Um.DeselectUnit();
@@ -146,6 +145,7 @@ public class CursorManager : MonoBehaviour
                 if (Um.SelectedUnit == refUnit) {  StartCoroutine(Um.MoveUnit());  }
                 return;
             }
+
             // Can't select an enemy unit
             if (refUnit.Owner != Gm.PlayerTurn) { return; }
 
@@ -158,10 +158,8 @@ public class CursorManager : MonoBehaviour
         {
             if (Um.SelectedUnit != null)
             {
-                
                 // Move towards the selected tile
                 StartCoroutine(Um.MoveUnit());
-             
             }
             else
             {
@@ -172,6 +170,4 @@ public class CursorManager : MonoBehaviour
             }
         }
     }
- 
-   
 }

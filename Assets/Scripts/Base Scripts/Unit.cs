@@ -109,7 +109,6 @@ public class Unit : MonoBehaviour
     // A recursive function to fill the ValidTiles dictionary
     private void SeekTile(Vector3Int current, int CurrFuel)
     {
-
         // Access the current tile
         Tile currTile = Mm.Map.GetTile<Tile>(current);
         if (currTile == null) { return; }
