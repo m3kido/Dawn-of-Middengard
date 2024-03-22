@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 540ef1dcd2a95d144a43d2bdebc66505, type: 3}
+  m_Script: {fileID: 11500000, guid: 1746708427b3fde4a9f4cdbbb5346d3d, type: 3}
   m_Name: AzureCastleSO
   m_EditorClassIdentifier: 
   BuildingName: 0
   BuildingTile: {fileID: 11400000, guid: fc340f26843474f4da6fa1a1b4b608e9, type: 2}
-  Color: 1
-  DeployableUnits: 
+  Color: 0

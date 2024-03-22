@@ -9,11 +9,9 @@ public class BuildingManager : MonoBehaviour
     UnitManager Um;
     GameManager Gm;
 
-
     [FormerlySerializedAs("UnitPrefabs")] [SerializeField] private List<Unit> _unitPrefabs;
     private Dictionary<Tile, BuildingDataSO> _buildingTileData;
     [SerializeField] private BuildingDataSO[] _buildingDatas;
-
 
     public Dictionary<Vector3Int, Building> Buildings;
 
@@ -37,7 +35,6 @@ public class BuildingManager : MonoBehaviour
 
         // Scan the map and put all the buldings in the _buildings dictionary
         ScanMapForBuildings();
-
     }
     private void OnEnable()
     {

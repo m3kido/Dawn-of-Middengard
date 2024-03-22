@@ -85,7 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 404f1d4d0780d774699fb585be0156d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Data: {fileID: 11400000, guid: 377aff6a34101e841bb51303d0cf5623, type: 2}
+  Data: {fileID: 11400000, guid: 35af56c91dff4954c922141f844583c4, type: 2}
   Health: 100
   Provisions: 99
   IsSelected: 0
