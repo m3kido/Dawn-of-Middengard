@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 // Scriptable object to get building datas
 public abstract class BuildingDataSO : ScriptableObject
 {
-    public EBuildings BuildingName;
+    public EBuildings BuildingType;
     public Tile BuildingTile;
     public ETeamColors Color;
 }

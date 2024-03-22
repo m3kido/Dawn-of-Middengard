@@ -1,13 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class CursorController : MonoBehaviour
+public class CursorManager : MonoBehaviour
 {
     UnitManager Um;
     MapManager Mm;
@@ -33,7 +27,7 @@ public class CursorController : MonoBehaviour
     void Update()
     {
         // Handle input every frame
-        if(Gm.GameState==EPlayerStates.Idle || Gm.GameState==EPlayerStates.Selecting) {
+        if(Gm.CurrentPlayerState==EPlayerStates.Idle || Gm.CurrentPlayerState==EPlayerStates.Selecting) {
             HandleInput();
         }
         
@@ -130,7 +124,7 @@ public class CursorController : MonoBehaviour
     private void XClicked()
     {
       
-            if(Gm.GameState== EPlayerStates.Selecting) {
+            if(Gm.CurrentPlayerState== EPlayerStates.Selecting) {
                     // Cancel select
                     HoverTile = Mm.Map.WorldToCell(Um.SelectedUnit.transform.position);
                     Um.DeselectUnit();

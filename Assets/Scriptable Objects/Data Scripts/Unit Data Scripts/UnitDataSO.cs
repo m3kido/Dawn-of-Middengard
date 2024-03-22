@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Scriptable object to get unit datas
 public abstract class UnitDataSO : ScriptableObject
 {
-    public EUnits UnitName;
+    public EUnits UnitType;
     public int MoveRange;
     public int MaxProvisions;
     public int LineOfSight;

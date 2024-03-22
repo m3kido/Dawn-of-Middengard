@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ActionMenu : MonoBehaviour
 {
-    CursorController Cc;
+    CursorManager Cc;
     GameManager Gm;
     UnitManager Um;
     BuildingManager Bm;
@@ -26,7 +26,7 @@ public class ActionMenu : MonoBehaviour
     // public GameObject CaptureOption;
     private void Awake()
     {
-        Cc = FindAnyObjectByType<CursorController>();
+        Cc = FindAnyObjectByType<CursorManager>();
         Um = FindAnyObjectByType<UnitManager>();
         Gm = FindAnyObjectByType<GameManager>();
         Bm = FindAnyObjectByType<BuildingManager>();
@@ -55,7 +55,7 @@ public class ActionMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.X))
         {
-            Gm.GameState = EPlayerStates.Selecting;
+            Gm.CurrentPlayerState = EPlayerStates.Selecting;
             Um.SelectedUnit.transform.position = Cc.SaveTile;
             if (Um.Path.Count != 0)
             {
@@ -70,7 +70,7 @@ public class ActionMenu : MonoBehaviour
             if (OptionsList[SelectedOption].name.Contains("Wait"))
             {
                 Um.EndMove();
-                Gm.GameState = EPlayerStates.Idle;
+                Gm.CurrentPlayerState = EPlayerStates.Idle;
             }
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))

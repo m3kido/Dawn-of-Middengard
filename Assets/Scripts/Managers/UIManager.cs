@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class UIManager : MonoBehaviour
 {
@@ -45,7 +41,7 @@ public class UIManager : MonoBehaviour
             case EPlayerStates.InActionsMenu: { ActionMenu.SetActive(false); break; }
             default: { break; }
         }
-        switch (Gm.GameState)
+        switch (Gm.CurrentPlayerState)
         {
             case EPlayerStates.InActionsMenu: {  ActionMenu.SetActive(true); break; }
             default: { break; }

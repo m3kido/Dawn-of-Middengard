@@ -1,11 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 // This script handles unit interactions and
 // keeps track of units and the path drawn by the cursor
@@ -61,7 +57,7 @@ public class UnitManager : MonoBehaviour
     public bool IsObstacle(Vector3Int pos, Unit unit)
     {
         Unit tileUnit = FindUnit(pos);
-        if (!unit.Data.IsWalkable(Mm.GetTileData(pos).TerrainName)) { return true; }
+        if (!unit.Data.IsWalkable(Mm.GetTileData(pos).TerrainType)) { return true; }
         if (tileUnit != null && Gm.Players[tileUnit.Owner].TeamSide != Gm.Players[unit.Owner].TeamSide) { return true; }
         return false;
     }
@@ -98,7 +94,7 @@ public class UnitManager : MonoBehaviour
         SelectedUnit = unit;
         SelectedUnit.HighlightTiles();
         DrawPath();
-        Gm.GameState = EPlayerStates.Selecting;
+        Gm.CurrentPlayerState = EPlayerStates.Selecting;
     }
 
     // Deselect the selected unit
@@ -109,7 +105,7 @@ public class UnitManager : MonoBehaviour
         SelectedUnit = null;
         Path.Clear();
         PathCost = 0;
-        Gm.GameState = EPlayerStates.Idle;
+        Gm.CurrentPlayerState = EPlayerStates.Idle;
     }
 
     // Move the selected unit
@@ -129,7 +125,7 @@ public class UnitManager : MonoBehaviour
         yield return 1f;
         SelectedUnit.IsMoving = false;
         
-        Gm.GameState = EPlayerStates.InActionsMenu;
+        Gm.CurrentPlayerState = EPlayerStates.InActionsMenu;
       
     }
     

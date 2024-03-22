@@ -3,62 +3,69 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
 
+// Class to manage Buildings
 public class BuildingManager : MonoBehaviour
 {
+    // Managers will be needed
     MapManager Mm;
     UnitManager Um;
     GameManager Gm;
 
+    // List to store units that can be bought in the building
     [FormerlySerializedAs("UnitPrefabs")] [SerializeField] private List<Unit> _unitPrefabs;
-    private Dictionary<Tile, BuildingDataSO> _buildingTileData;
+
+    // Dictionary mapping a tile (on which there's a building) to its building data
+    private Dictionary<Tile, BuildingDataSO> _buildingDataFromTile;
+
+    // Array containing building datas of all buildings (provided in the inspector)
     [SerializeField] private BuildingDataSO[] _buildingDatas;
 
+    // Dictionary mapping a position (on which there's a building) to its building
     public Dictionary<Vector3Int, Building> Buildings;
 
-    // Get Building datas of every building type from the inspector
     private void Awake()
     {
-        _buildingTileData = new Dictionary<Tile, BuildingDataSO>();
-
+        // Fill the _buildingDataFromTile dictionary
+        _buildingDataFromTile = new Dictionary<Tile, BuildingDataSO>();
         foreach (var buildingData in _buildingDatas)
         {
-            _buildingTileData.Add(buildingData.BuildingTile, buildingData);
+            // Put the Building tile as a key, and the building data as a value
+            _buildingDataFromTile.Add(buildingData.BuildingTile, buildingData);
         }
     }
 
     void Start()
     {
-        // Get the Map and Game Managers from the hierarchy
+        // Get the Map, Game and Unit Managers from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
         Gm = FindAnyObjectByType<GameManager>();
         Um = FindAnyObjectByType<UnitManager>();
 
-        // Scan the map and put all the buldings in the _buildings dictionary
+        // Scan the map and put all the buldings in the Buildings dictionary
         ScanMapForBuildings();
     }
+
     private void OnEnable()
     {
-        GameManager.OnDayEnd += AddGold;
-    }
-    private void OnDisable()
-    {
-        GameManager.OnDayEnd -= AddGold;
+        GameManager.OnDayEnd += GetGoldFromBuildings;
     }
 
-    // Scan the map and put all the buldings in the _buildings dictionary
+    private void OnDisable()
+    {
+        GameManager.OnDayEnd -= GetGoldFromBuildings;
+    }
+
+    // Scan the map and put all the buldings in the Buildings dictionary
     private void ScanMapForBuildings()
     {
         Buildings = new Dictionary<Vector3Int, Building>();
         foreach (var pos in Mm.Map.cellBounds.allPositionsWithin)
         {
             TerrainDataSO posTile = Mm.GetTileData(pos);
-
-
-            if (posTile != null && posTile.TerrainName == ETerrains.Building)
+            if (posTile != null && posTile.TerrainType == ETerrains.Building)
             {
-                BuildingDataSO currData = _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
-                Buildings.Add(pos, new Building(pos, currData.BuildingName, (int)currData.Color));
-
+                BuildingDataSO currData = _buildingDataFromTile[Mm.Map.GetTile<Tile>(pos)];
+                Buildings.Add(pos, new Building(pos, currData.BuildingType, (int)currData.Color));
             }
         }
     }
@@ -66,7 +73,7 @@ public class BuildingManager : MonoBehaviour
     // Get building data of given grid position
     public BuildingDataSO GetBuildingData(Vector3Int pos)
     {
-        return _buildingTileData[Mm.Map.GetTile<Tile>(pos)];
+        return _buildingDataFromTile[Mm.Map.GetTile<Tile>(pos)];
     }
 
     // Capture building
@@ -80,17 +87,18 @@ public class BuildingManager : MonoBehaviour
         }
     }
 
+    // Spawn a unit from a building
     public void SpawnUnit(EUnits unitType, Building building, int owner)
     {
         Unit newUnit = Instantiate<Unit>(_unitPrefabs[(int)unitType], building.Position, Quaternion.identity);
         newUnit.Owner = owner;
         newUnit.HasMoved = true;
-        //outline this mf
         if (newUnit == null) { print("d");  return; }
         Um.Units.Add(newUnit);
     }
 
-    private void AddGold()
+    // Gain gold every day
+    private void GetGoldFromBuildings()
     {
         foreach (var building in Buildings.Values)
         {
@@ -98,7 +106,6 @@ public class BuildingManager : MonoBehaviour
             {
                 Gm.Players[building.Owner].Gold += 1000;
             }
-           
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using UnityEngine;
-
+﻿// Class to represent the player
 public class Player
 {
     public string Name;
@@ -13,10 +12,8 @@ public class Player
     public Player(string name, ETeamColors color, ETeams teamSide, Captain captain)
     {
        Name = name;
-
        Color = color;
        TeamSide = teamSide;
-
        Captain = captain;
     }
 }

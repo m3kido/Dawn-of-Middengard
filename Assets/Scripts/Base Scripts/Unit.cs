@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+// Class to represent a unit, associated to every unit prefab on the scene
 public class Unit : MonoBehaviour
 {
     MapManager Mm;
@@ -38,7 +37,7 @@ public class Unit : MonoBehaviour
         }
     }
 
-    // Dictionary to hold the grid position of the valid tiles along with the fuel consumed to reach them
+    // Dictionary to hold the grid position of the valid tiles along with the provisions consumed to reach them
     public Dictionary<Vector3Int, int> ValidTiles = new();
 
     void Awake()
@@ -48,13 +47,14 @@ public class Unit : MonoBehaviour
         Provisions = Data.MaxProvisions;
         HasMoved = false;
     }
+
     private void Start()
     {
         // Get map and unit manager from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
         Um = FindAnyObjectByType<UnitManager>();
-
     }
+
     // Highlight the accessible tiles to the unit
     public void HighlightTiles()
     {
@@ -159,7 +159,5 @@ public class Unit : MonoBehaviour
         SeekTile(left, CurrFuel);
         SeekTile(right, CurrFuel);
     }
-
-
 }
 

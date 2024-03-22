@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -16,7 +14,7 @@ public class MapManager : MonoBehaviour
     [SerializeField] private RuleTile _borderedTile;
     [SerializeField] private Tile[] _arrowTiles;
 
-    private Dictionary<Tile, TerrainDataSO> _dataFromTile = new Dictionary<Tile, TerrainDataSO>();
+    private Dictionary<Tile, TerrainDataSO> _dataFromTile = new();
     
     // Get tile datas of every tile type from the inspector
     private void Awake()
