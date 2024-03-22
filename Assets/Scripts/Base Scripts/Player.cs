@@ -5,7 +5,7 @@ public class Player
     public bool Lost = false;
     public ETeamColors Color;
     public ETeams TeamSide;
-    public Captain Captain;
+    public Captain PlayerCaptain;
     public int Gold = 0;
     
     // Player constructor
@@ -14,6 +14,6 @@ public class Player
        Name = name;
        Color = color;
        TeamSide = teamSide;
-       Captain = captain;
+       PlayerCaptain = captain;
     }
 }
