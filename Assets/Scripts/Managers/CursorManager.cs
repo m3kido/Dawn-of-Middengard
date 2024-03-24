@@ -9,16 +9,19 @@ public class CursorManager : MonoBehaviour
     BuildingManager Bm;
     GameManager Gm;
 
-    public Vector3Int HoverTile
+    // The tile which the cursor is hovering over
+    public Vector3Int HoveredOverTile
     {
         get => Mm.Map.WorldToCell(transform.position);
         set => transform.position = value;
     }
+
+    // 
     public Vector3Int SaveTile;
 
     void Start()
     {
-        // Get the unit, map and game managers from the hierarchy
+        // Get the unit, map, game and building managers from the hierarchy
         Um = FindAnyObjectByType<UnitManager>();
         Mm = FindAnyObjectByType<MapManager>();
         Gm = FindAnyObjectByType<GameManager>();
@@ -33,6 +36,7 @@ public class CursorManager : MonoBehaviour
         }
     }
 
+    // Handles keyboard input
     void HandleInput()
     {
         // Dont handle any input if a unit is moving or attacking
@@ -73,7 +77,7 @@ public class CursorManager : MonoBehaviour
      void MoveSelector(Vector3Int offset)
     {
         // Dont let the cursor move out of the highlited tiles
-        if (Um.SelectedUnit != null && !Um.SelectedUnit.ValidTiles.ContainsKey(HoverTile + offset))
+        if (Um.SelectedUnit != null && !Um.SelectedUnit.ValidTiles.ContainsKey(HoveredOverTile + offset))
         {
             return;
         }
@@ -82,7 +86,7 @@ public class CursorManager : MonoBehaviour
         if (Um.SelectedUnit != null)
         {
             // Undraw the path if we get back the start point
-            if (Um.SelectedUnit.transform.position == HoverTile + offset)
+            if (Um.SelectedUnit.transform.position == HoveredOverTile + offset)
             {
                 Um.UndrawPath();
                 Um.Path.Clear();
@@ -90,14 +94,14 @@ public class CursorManager : MonoBehaviour
             }
             else
             {
-                int index = Um.Path.IndexOf(HoverTile + offset); // Returns -1 if not found
+                int index = Um.Path.IndexOf(HoveredOverTile + offset); // Returns -1 if not found
                 if (index < 0)
                 {
                     // Add tile to path
-                    int cost = Mm.GetTileData(Mm.Map.GetTile<Tile>(HoverTile + offset)).ProvisionsCost;
+                    int cost = Mm.GetTileData(Mm.Map.GetTile<Tile>(HoveredOverTile + offset)).ProvisionsCost;
                     if (Um.PathCost + cost > Um.SelectedUnit.Provisions) { return; }
                     Um.UndrawPath();
-                    Um.Path.Add(HoverTile + offset);
+                    Um.Path.Add(HoveredOverTile + offset);
                     Um.PathCost += cost;
                 }
                 else
@@ -116,25 +120,24 @@ public class CursorManager : MonoBehaviour
             }
             Um.DrawPath();
         }
-        HoverTile += offset;
+        HoveredOverTile += offset;
     }
 
-    // Handle X Clicked
+    // Handle X Click
     private void XClicked()
     {
-      
-            if(Gm.CurrentStateOfPlayer== EPlayerStates.Selecting) {
-                    // Cancel select
-                    HoverTile = Mm.Map.WorldToCell(Um.SelectedUnit.transform.position);
-                    Um.DeselectUnit();
-                    
-            }
+        if(Gm.CurrentStateOfPlayer == EPlayerStates.Selecting) 
+        {
+            // Cancel selection
+            HoveredOverTile = Mm.Map.WorldToCell(Um.SelectedUnit.transform.position);
+            Um.DeselectUnit();       
+        }
     }
 
     // Handle Space click
     private void SpaceClicked()
     {
-        Unit refUnit = Um.FindUnit(HoverTile);
+        Unit refUnit = Um.FindUnit(HoveredOverTile);
 
         // If there is a unit on the hovered tile
         if (refUnit != null)
@@ -151,7 +154,7 @@ public class CursorManager : MonoBehaviour
 
             // Can't select a unit that has already moved
             if (refUnit.HasMoved) { return; }
-            SaveTile = HoverTile;
+            SaveTile = HoveredOverTile;
             Um.SelectUnit(refUnit);
         }
         else
@@ -163,9 +166,9 @@ public class CursorManager : MonoBehaviour
             }
             else
             {
-                if (Bm.Buildings.ContainsKey(HoverTile))
+                if (Bm.Buildings.ContainsKey(HoveredOverTile))
                 {
-                    Bm.SpawnUnit(EUnits.Infantry, Bm.Buildings[HoverTile], Gm.PlayerTurn);
+                    Bm.SpawnUnit(EUnits.Infantry, Bm.Buildings[HoveredOverTile], Gm.PlayerTurn);
                 }
             }
         }

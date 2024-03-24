@@ -27,7 +27,6 @@ public class UnitManager : MonoBehaviour
 
         // Seek for units in the hierarchy
         Units = FindObjectsOfType<Unit>().ToList();
-        
     }
 
     private void OnEnable()
@@ -111,8 +110,7 @@ public class UnitManager : MonoBehaviour
 
     // Move the selected unit
     public IEnumerator MoveUnit()
-    {
-        
+    {  
         SelectedUnit.IsMoving = true;
         SelectedUnit.ResetTiles();
         UndrawPath();
@@ -127,7 +125,6 @@ public class UnitManager : MonoBehaviour
         SelectedUnit.IsMoving = false;
         
         Gm.CurrentStateOfPlayer = EPlayerStates.InActionsMenu;
-      
     }
     
     // Runs at the end of the day 
@@ -137,6 +134,8 @@ public class UnitManager : MonoBehaviour
             unit.HasMoved=false;
         }
     }
+
+    // Confirm the move had ended
     public void EndMove()
     {
         SelectedUnit.Provisions -= PathCost;

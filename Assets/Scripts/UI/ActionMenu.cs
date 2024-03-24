@@ -6,7 +6,8 @@ using UnityEngine.UI;
 
 public class ActionMenu : MonoBehaviour
 {
-    CursorManager Cc;
+    // Managers will be needed
+    CursorManager Cm;
     GameManager Gm;
     UnitManager Um;
     BuildingManager Bm;
@@ -17,16 +18,17 @@ public class ActionMenu : MonoBehaviour
     int SelectedOption;
 
     public GameObject WaitOption;
-    //public GameObject FireOption;
+    // public GameObject FireOption;
     // public GameObject CaptureOption;
 
     private GameObject WaitOptionInstance;
     private GameObject WaitOptionInstance2;
-    //public GameObject FireOption;
+    // public GameObject FireOption;
     // public GameObject CaptureOption;
+
     private void Awake()
     {
-        Cc = FindAnyObjectByType<CursorManager>();
+        Cm = FindAnyObjectByType<CursorManager>();
         Um = FindAnyObjectByType<UnitManager>();
         Gm = FindAnyObjectByType<GameManager>();
         Bm = FindAnyObjectByType<BuildingManager>();
@@ -36,14 +38,15 @@ public class ActionMenu : MonoBehaviour
         WaitOptionInstance.SetActive(false);
         WaitOptionInstance2 = Instantiate(WaitOption, Options.transform);
         WaitOptionInstance2.SetActive(false);
-
     }
+
     private void OnEnable()
     {
         if (Bm.Buildings == null) { return; }
         CalculateOptions();
 
     }
+
     private void OnDisable()
     {
         if(OptionsList.Count == 0) { return; }
@@ -51,15 +54,16 @@ public class ActionMenu : MonoBehaviour
         foreach (GameObject option in OptionsList) { option.SetActive(false); }
         OptionsList.Clear();
     }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.X))
         {
             Gm.CurrentStateOfPlayer = EPlayerStates.Selecting;
-            Um.SelectedUnit.transform.position = Cc.SaveTile;
+            Um.SelectedUnit.transform.position = Cm.SaveTile;
             if (Um.Path.Count != 0)
             {
-                Cc.HoverTile = Um.Path.Last();
+                Cm.HoveredOverTile = Um.Path.Last();
             }
 
             Um.SelectUnit(Um.SelectedUnit);
@@ -85,9 +89,6 @@ public class ActionMenu : MonoBehaviour
             SelectedOption = (SelectedOption + 1 ) % OptionsList.Count;
             OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
         }
-
-
-
     }
     private void CalculateOptions()
     {
@@ -105,17 +106,19 @@ public class ActionMenu : MonoBehaviour
         }
 
     }
+
     /* private void CheckFire()
       {
           if (Um.SelectedUnit.CanAttack())
           {
               OptionsList.Add(FireOption);
           }
-      }*/
+      } */
+
     private void CheckCapture()
     {
         if (Bm.Buildings == null) { return; }
-        var building = Bm.Buildings.ContainsKey(Cc.HoverTile) ? Bm.Buildings[Cc.HoverTile] : null;
+        var building = Bm.Buildings.ContainsKey(Cm.HoveredOverTile) ? Bm.Buildings[Cm.HoveredOverTile] : null;
         if (building != null && building.Owner != Gm.PlayerTurn)
         {
             //OptionsList.Add( Instantiate(CaptureOption, Options.transform));
@@ -127,6 +130,5 @@ public class ActionMenu : MonoBehaviour
 
 
         }
-
     }
 }

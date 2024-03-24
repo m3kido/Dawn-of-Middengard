@@ -271,7 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerTurn: 0
   Day: 1
-  LastState: 0
+  LastStateOfPlayer: 0
 --- !u!1001 &254822049
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -867,7 +867,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1.3729858, y: -26.924011}
+  m_AnchoredPosition: {x: 1.3729858, y: -26.923965}
   m_SizeDelta: {x: -228.006, y: -139.352}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1108215503
@@ -3316,8 +3316,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -120, y: -75}
-  m_SizeDelta: {x: 500, y: 490}
+  m_AnchoredPosition: {x: -278, y: -34}
+  m_SizeDelta: {x: 513.505, y: 453.044}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1855429940
 MonoBehaviour:
