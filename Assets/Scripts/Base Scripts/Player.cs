@@ -10,7 +10,7 @@
     public bool IsCelesteActive { get; private set; } = false;
 
     // Player constructor
-    public Player(string name, ETeamColors color, ETeams teamSide, Captain captain)
+    public Player(string name, EPlayerColors color, ETeams teamSide, Captain captain)
     {
         Name = name;
 

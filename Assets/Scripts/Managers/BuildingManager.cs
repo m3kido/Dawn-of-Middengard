@@ -85,9 +85,9 @@ public class BuildingManager : MonoBehaviour
 
     public void SpawnUnit(EUnitType UnitType, Building building, int Owner)
     {
-        Unit NewUnit = Instantiate(UnitPrefabs[(int)UnitType], building.Position, Quaternion.identity);
-        NewUnit.Owner = Owner;
-        NewUnit.HasMoved = true;
+        Unit newUnit = Instantiate(_unitPrefabs[(int)UnitType], building.Position, Quaternion.identity);
+        newUnit.Owner = Owner;
+        newUnit.HasMoved = true;
         //outline this mf
         if (newUnit == null) { print("d");return; }
         Um.Units.Add(newUnit);
