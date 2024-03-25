@@ -1,9 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -22,7 +19,7 @@ public class UnitManager : MonoBehaviour
     GameManager Gm;
     MapManager Mm;
     
-    void Start()
+    void Awake()
     {
         // Get map and game managers from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
@@ -36,12 +33,12 @@ public class UnitManager : MonoBehaviour
     private void OnEnable()
     {
         // Subscribe to the day end event
-        GameManager.OnDayEnd += ResetUnits;
+        GameManager.OnTurnEnd += ResetUnits;
     }
     private void OnDisable()
     {
         // Unsubscribe from the day end event
-        GameManager.OnDayEnd -= ResetUnits;
+        GameManager.OnTurnEnd -= ResetUnits;
     }
 
     // Get unit from given grid position
@@ -97,6 +94,8 @@ public class UnitManager : MonoBehaviour
     {
         SelectedUnit = unit;
         SelectedUnit.HighlightTiles();
+        DrawPath();
+        Gm.GameState = EGameStates.Selecting;
     }
 
     // Deselect the selected unit
@@ -107,26 +106,28 @@ public class UnitManager : MonoBehaviour
         SelectedUnit = null;
         Path.Clear();
         PathCost = 0;
+        Gm.GameState = EGameStates.Idle;
     }
 
     // Move the selected unit
     public IEnumerator MoveUnit()
     {
+        
         SelectedUnit.IsMoving = true;
         SelectedUnit.ResetTiles();
         UnDrawPath();
+        
         foreach (var pos in Path)
         {
             SelectedUnit.transform.position = pos;
-            SelectedUnit.Fuel -= Mm.GetTileData(Mm.Map.GetTile<Tile>(pos)).FuelCost;
-            yield return new WaitForSecondsRealtime(0.08f);
-        }
-        SelectedUnit.IsMoving = false;
+            yield return new WaitForSeconds(0.08f) ;
 
-        Path.Clear();
-        PathCost = 0;
-        SelectedUnit.MarkMoved();
-        SelectedUnit = null;
+        }
+        yield return 1f;
+        SelectedUnit.IsMoving = false;
+        
+        Gm.GameState = EGameStates.ActionMenu;
+      
     }
     
     // Runs at the end of the day 
@@ -136,7 +137,6 @@ public class UnitManager : MonoBehaviour
             unit.HasMoved=false;
         }
     }
-
     public void EndMove()
     {
         SelectedUnit.Fuel -= PathCost;

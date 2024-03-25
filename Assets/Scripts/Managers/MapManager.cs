@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,15 +21,14 @@ public class MapManager : MonoBehaviour
     // Get tile datas of every tile type from the inspector
     private void Awake()
     {
-        _dataFromTile = new Dictionary<Tile, TileData>();
         
         foreach (var tileData in _tileDatas)
         {
-            foreach(var tile in tileData.Tiles)
+            foreach(var tile in tileData.Tiles) 
             {
                 _dataFromTile.Add(tile, tileData);
             }
-        }     
+        }    
     }
 
     // Get data of given tile

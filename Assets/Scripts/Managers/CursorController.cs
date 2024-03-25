@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -18,6 +13,7 @@ public class CursorController : MonoBehaviour
         get => Mm.Map.WorldToCell(transform.position);
         set => transform.position = value;
     }
+    public Vector3Int SaveTile;
 
     void Start()
     {
@@ -31,7 +27,10 @@ public class CursorController : MonoBehaviour
     void Update()
     {
         // Handle input every frame
-        HandleInput();
+        if(Gm.GameState==EGameStates.Idle || Gm.GameState==EGameStates.Selecting) {
+            HandleInput();
+        }
+        
     }
 
     void HandleInput()
@@ -124,13 +123,12 @@ public class CursorController : MonoBehaviour
     // Handle X Clicked
     private void XClicked()
     {
-        // Will be modified to handle canceling the move
-            if (Um.SelectedUnit != null)
-            {
-                // Cancel select
-                HoverTile = Mm.Map.WorldToCell(Um.SelectedUnit.transform.position);
-                Um.DeselectUnit();
-
+      
+            if(Gm.GameState== EGameStates.Selecting) {
+                    // Cancel select
+                    HoverTile = Mm.Map.WorldToCell(Um.SelectedUnit.transform.position);
+                    Um.DeselectUnit();
+                    
             }
     }
 
@@ -145,7 +143,7 @@ public class CursorController : MonoBehaviour
             // Can't select an another unit when one is selected 
             if (Um.SelectedUnit != null)
             {
-                if (Um.SelectedUnit == refUnit) { Um.DeselectUnit(); }
+                if (Um.SelectedUnit == refUnit) {  StartCoroutine(Um.MoveUnit());  }
                 return;
             }
             // Can't select an enemy unit
@@ -153,21 +151,23 @@ public class CursorController : MonoBehaviour
 
             // Can't select a unit that has already moved
             if (refUnit.HasMoved) { return; }
-            
+            SaveTile = HoverTile;
             Um.SelectUnit(refUnit);
         }
         else
         {
             if (Um.SelectedUnit != null)
             {
+                
                 // Move towards the selected tile
                 StartCoroutine(Um.MoveUnit());
+             
             }
             else
             {
                 if (Bm.Buildings.ContainsKey(HoverTile))
                 {
-                    Bm.SpawnUnit(EUnits.Knight, Bm.Buildings[HoverTile], Gm.PlayerTurn);
+                    Bm.SpawnUnit(EUnitType.Infantry, Bm.Buildings[HoverTile], Gm.PlayerTurn);
                 }
             }
         }

@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -20,7 +18,7 @@ public class Unit : MonoBehaviour
     public EUnitType Type;
 
     public bool IsMoving = false;
-    private bool _hasMoved;
+    private bool _hasMoved = false;
     public bool HasMoved
     {
         get
@@ -62,13 +60,13 @@ public class Unit : MonoBehaviour
     
     public Dictionary<Vector3Int, int> ValidTiles = new();
 
-    void Start()
+    private void Awake()
     {
+        rend = GetComponent<SpriteRenderer>();
         // Get map and unit manager from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
         Um = FindAnyObjectByType<UnitManager>();
         Gm = FindAnyObjectByType<GameManager>();
-        
     }
     // Highlight the accessible tiles to the unit
     public void HighlightTiles()
@@ -78,9 +76,10 @@ public class Unit : MonoBehaviour
         // Empty to remove previous cases
         ValidTiles.Clear();
 
+
         // WorlToCell takes a float postion and converts it to grid position
         Vector3Int startPos = Mm.Map.WorldToCell(transform.position);
-        
+
         // you can find SeekTile() just below
         SeekTile(startPos, -1);
         
@@ -157,7 +156,7 @@ public class Unit : MonoBehaviour
                 } else { return; }
             }
         }
-         else return;
+        else return;
         
        
         // Explore the nighbouring tiles
@@ -173,10 +172,10 @@ public class Unit : MonoBehaviour
         SeekTile(right, CurrFuel);
     }
     
-    // Assert the unit has moved
-    public void MarkMoved()
+
+    public static float L1Distance(Vector3 A, Vector3 B)
     {
-        HasMoved = true;
+        return Mathf.Abs(A.x - B.x) + Mathf.Abs(A.y - B.y) + Mathf.Abs(A.z - B.z);
     }
 
 }
