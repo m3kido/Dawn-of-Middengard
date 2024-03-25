@@ -9,13 +9,14 @@ public class GameManager : MonoBehaviour
     public bool GameEnded = false;
     public int Day = 1;
     public List<Player> Players;
+
     private void Start()
     {
         // Initialize players
         Players = new List<Player>
         {
-            new("Andrew",0, 0, null),
-            new("Freya",1, 1, null)
+            new("Andrew",ETeamColors.Amber,ETeams.None, null),
+            new("Freya",ETeamColors.Azure,ETeams.A, null)
         };
     }
 

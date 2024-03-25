@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -167,7 +162,7 @@ public class CursorController : MonoBehaviour
             {
                 if (Bm.Buildings.ContainsKey(HoverTile))
                 {
-                    Bm.SpawnUnit(EUnits.Knight, Bm.Buildings[HoverTile], Gm.PlayerTurn);
+                    Bm.SpawnUnit(EUnitType.Infantry, Bm.Buildings[HoverTile], Gm.PlayerTurn);
                 }
             }
         }

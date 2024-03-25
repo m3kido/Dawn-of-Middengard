@@ -546,6 +546,10 @@ PrefabInstance:
       propertyPath: TeamSide
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2305301234715960147, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
+      propertyPath: Owner
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2330572529859379085, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
       propertyPath: m_Name
       value: Infantry (1)

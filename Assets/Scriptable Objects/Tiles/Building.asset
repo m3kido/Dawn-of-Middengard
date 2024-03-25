@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Building
   m_EditorClassIdentifier: 
   TileType: 5
-  Tiles: []
+  Tiles:
+  - {fileID: 11400000, guid: fc340f26843474f4da6fa1a1b4b608e9, type: 2}
   FuelCost: 10
   Defence: 3

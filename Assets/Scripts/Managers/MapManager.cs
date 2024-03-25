@@ -20,7 +20,6 @@ public class MapManager : MonoBehaviour
     // Get tile datas of every tile type from the inspector
     private void Awake()
     {
-        _dataFromTile = new Dictionary<Tile, TileData>();
         
         foreach (var tileData in _tileDatas)
         {

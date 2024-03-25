@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -62,14 +60,15 @@ public class Unit : MonoBehaviour
     
     public Dictionary<Vector3Int, int> ValidTiles = new();
 
-    void Start()
+    private void Awake()
     {
+        rend = GetComponent<SpriteRenderer>();
         // Get map and unit manager from the hierarchy
         Mm = FindAnyObjectByType<MapManager>();
         Um = FindAnyObjectByType<UnitManager>();
         Gm = FindAnyObjectByType<GameManager>();
-        
     }
+
     // Highlight the accessible tiles to the unit
     public void HighlightTiles()
     {
@@ -78,9 +77,10 @@ public class Unit : MonoBehaviour
         // Empty to remove previous cases
         ValidTiles.Clear();
 
+
         // WorlToCell takes a float postion and converts it to grid position
         Vector3Int startPos = Mm.Map.WorldToCell(transform.position);
-        
+
         // you can find SeekTile() just below
         SeekTile(startPos, -1);
         
@@ -177,6 +177,11 @@ public class Unit : MonoBehaviour
     public void MarkMoved()
     {
         HasMoved = true;
+    }
+
+    public static float L1Distance(Vector3 A, Vector3 B)
+    {
+        return Mathf.Abs(A.x - B.x) + Mathf.Abs(A.y - B.y) + Mathf.Abs(A.z - B.z);
     }
 
 }
