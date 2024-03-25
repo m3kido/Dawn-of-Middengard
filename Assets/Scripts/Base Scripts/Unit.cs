@@ -18,7 +18,7 @@ public class Unit : MonoBehaviour
     public EUnitType Type;
 
     public bool IsMoving = false;
-    private bool _hasMoved;
+    private bool _hasMoved = false;
     public bool HasMoved
     {
         get
@@ -68,7 +68,6 @@ public class Unit : MonoBehaviour
         Um = FindAnyObjectByType<UnitManager>();
         Gm = FindAnyObjectByType<GameManager>();
     }
-
     // Highlight the accessible tiles to the unit
     public void HighlightTiles()
     {
@@ -157,7 +156,7 @@ public class Unit : MonoBehaviour
                 } else { return; }
             }
         }
-         else return;
+        else return;
         
        
         // Explore the nighbouring tiles
@@ -173,11 +172,6 @@ public class Unit : MonoBehaviour
         SeekTile(right, CurrFuel);
     }
     
-    // Assert the unit has moved
-    public void MarkMoved()
-    {
-        HasMoved = true;
-    }
 
     public static float L1Distance(Vector3 A, Vector3 B)
     {

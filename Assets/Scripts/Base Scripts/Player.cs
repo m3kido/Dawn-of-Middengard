@@ -2,7 +2,7 @@
 {
     public string Name;
     public bool Lost = false;
-    public ETeamColors Color;
+    public EPlayerColors Color;
     public ETeams TeamSide;
     public Captain Captain;
     public int Gold;
