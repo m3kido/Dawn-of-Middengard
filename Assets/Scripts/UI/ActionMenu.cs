@@ -1,110 +1,107 @@
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ActionMenu : MonoBehaviour
 {
     // Managers will be needed
-    CursorManager Cm;
-    GameManager Gm;
-    UnitManager Um;
-    BuildingManager Bm;
+    private CursorManager _cm;
+    private GameManager _gm;
+    private UnitManager _um;
+    private BuildingManager _bm;
 
-    public Sprite Cursor;
-    public GameObject Options;
-    List<GameObject> OptionsList;
-    int SelectedOption;
+    [SerializeField] private Sprite _cursor;
+    [SerializeField] private GameObject _options;
+    private List<GameObject> _optionsList;
+    private int _selectedOption;
 
-    public GameObject WaitOption;
+    [SerializeField] private GameObject _waitOption;
     // public GameObject FireOption;
     // public GameObject CaptureOption;
 
-    private GameObject WaitOptionInstance;
-    private GameObject WaitOptionInstance2;
+    private GameObject _waitOptionInstance;
+    private GameObject _waitOptionInstance2;
     // public GameObject FireOption;
     // public GameObject CaptureOption;
 
     private void Awake()
     {
-        Cm = FindAnyObjectByType<CursorManager>();
-        Um = FindAnyObjectByType<UnitManager>();
-        Gm = FindAnyObjectByType<GameManager>();
-        Bm = FindAnyObjectByType<BuildingManager>();
-        OptionsList = new List<GameObject>();
+        _cm = FindAnyObjectByType<CursorManager>();
+        _um = FindAnyObjectByType<UnitManager>();
+        _gm = FindAnyObjectByType<GameManager>();
+        _bm = FindAnyObjectByType<BuildingManager>();
+        _optionsList = new List<GameObject>();
 
-        WaitOptionInstance = Instantiate(WaitOption, Options.transform);
-        WaitOptionInstance.SetActive(false);
-        WaitOptionInstance2 = Instantiate(WaitOption, Options.transform);
-        WaitOptionInstance2.SetActive(false);
+        _waitOptionInstance = Instantiate(_waitOption, _options.transform);
+        _waitOptionInstance.SetActive(false);
+        _waitOptionInstance2 = Instantiate(_waitOption, _options.transform);
+        _waitOptionInstance2.SetActive(false);
     }
 
     private void OnEnable()
     {
-        if (Bm.Buildings == null) { return; }
+        if (_bm.BuildingFromPosition == null) { return; }
         CalculateOptions();
-
     }
 
     private void OnDisable()
     {
-        if(OptionsList.Count == 0) { return; }
-        OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.clear;
-        foreach (GameObject option in OptionsList) { option.SetActive(false); }
-        OptionsList.Clear();
+        if(_optionsList.Count == 0) { return; }
+        _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.clear;
+        foreach (GameObject option in _optionsList) { option.SetActive(false); }
+        _optionsList.Clear();
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.X))
         {
-            Gm.CurrentStateOfPlayer = EPlayerStates.Selecting;
-            Um.SelectedUnit.transform.position = Cm.SaveTile;
-            if (Um.Path.Count != 0)
+            _gm.CurrentStateOfPlayer = EPlayerStates.Selecting;
+            _um.SelectedUnit.transform.position = _cm.SaveTile;
+            if (_um.Path.Count != 0)
             {
-                Cm.HoveredOverTile = Um.Path.Last();
+                _cm.HoveredOverTile = _um.Path.Last();
             }
-
-            Um.SelectUnit(Um.SelectedUnit);
+            _um.SelectUnit(_um.SelectedUnit);
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
 
-            if (OptionsList[SelectedOption].name.Contains("Wait"))
+            if (_optionsList[_selectedOption].name.Contains("Wait"))
             {
-                Um.EndMove();
-                Gm.CurrentStateOfPlayer = EPlayerStates.Idle;
+                _um.EndMove();
+                _gm.CurrentStateOfPlayer = EPlayerStates.Idle;
             }
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.clear;
-            SelectedOption = (SelectedOption - 1 + OptionsList.Count) % OptionsList.Count;
-            OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
+            _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.clear;
+            _selectedOption = (_selectedOption - 1 + _optionsList.Count) % _optionsList.Count;
+            _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.clear;
-            SelectedOption = (SelectedOption + 1 ) % OptionsList.Count;
-            OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
+            _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.clear;
+            _selectedOption = (_selectedOption + 1 ) % _optionsList.Count;
+            _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
         }
     }
+
     private void CalculateOptions()
     {
 
-        //CheckFire();
+        // CheckFire();
         CheckCapture();
-        WaitOptionInstance2.SetActive(true);
-        OptionsList.Add(WaitOptionInstance2);
+        _waitOptionInstance2.SetActive(true);
+        _optionsList.Add(_waitOptionInstance2);
 
-        if (OptionsList.Count > 0)
+        if (_optionsList.Count > 0)
         {
-            SelectedOption = 0;
-            OptionsList[SelectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
+            _selectedOption = 0;
+            _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
 
         }
-
     }
 
     /* private void CheckFire()
@@ -117,18 +114,16 @@ public class ActionMenu : MonoBehaviour
 
     private void CheckCapture()
     {
-        if (Bm.Buildings == null) { return; }
-        var building = Bm.Buildings.ContainsKey(Cm.HoveredOverTile) ? Bm.Buildings[Cm.HoveredOverTile] : null;
-        if (building != null && building.Owner != Gm.PlayerTurn)
+        if (_bm.BuildingFromPosition == null) { return; }
+        var building = _bm.BuildingFromPosition.ContainsKey(_cm.HoveredOverTile) ? _bm.BuildingFromPosition[_cm.HoveredOverTile] : null;
+        if (building != null && building.Owner != _gm.PlayerTurn)
         {
-            //OptionsList.Add( Instantiate(CaptureOption, Options.transform));
+            // OptionsList.Add(Instantiate(CaptureOption, Options.transform));
         }
         else
         {
-            WaitOptionInstance.SetActive(true);
-            OptionsList.Add(WaitOptionInstance);
-
-
+            _waitOptionInstance.SetActive(true);
+            _optionsList.Add(_waitOptionInstance);
         }
     }
 }

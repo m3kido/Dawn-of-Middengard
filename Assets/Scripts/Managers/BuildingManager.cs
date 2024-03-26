@@ -7,21 +7,27 @@ using UnityEngine.Tilemaps;
 public class BuildingManager : MonoBehaviour
 {
     // Managers will be needed
-    MapManager Mm;
-    UnitManager Um;
-    GameManager Gm;
+    private MapManager _mm;
+    private UnitManager _um;
+    private GameManager _gm;
 
-    // List to store units that can be bought in the building
+    // List to store units that can be bought in the building (provided in the inspector)
     [FormerlySerializedAs("UnitPrefabs")] [SerializeField] private List<Unit> _unitPrefabs;
-
-    // Dictionary mapping a tile (on which there's a building) to its building data
-    private Dictionary<Tile, BuildingDataSO> _buildingDataFromTile;
 
     // Array containing building datas of all buildings (provided in the inspector)
     [SerializeField] private BuildingDataSO[] _buildingDatas;
 
+    // Dictionary mapping a tile (on which there's a building) to its building data
+    private Dictionary<Tile, BuildingDataSO> _buildingDataFromTile;
+
     // Dictionary mapping a position (on which there's a building) to its building
-    public Dictionary<Vector3Int, Building> Buildings;
+    private Dictionary<Vector3Int, Building> _buildingFromPosition;
+
+    // Readonly Properties for the previous fields
+    public List<Unit> UnitPrefabs => _unitPrefabs;
+    public BuildingDataSO[] BuildingDatas => _buildingDatas;
+    public Dictionary<Tile, BuildingDataSO> BuildingDataFromTile => _buildingDataFromTile;
+    public Dictionary<Vector3Int, Building> BuildingFromPosition => _buildingFromPosition;
 
     private void Awake()
     {
@@ -37,9 +43,9 @@ public class BuildingManager : MonoBehaviour
     void Start()
     {
         // Get the Map, Game and Unit Managers from the hierarchy
-        Mm = FindAnyObjectByType<MapManager>();
-        Gm = FindAnyObjectByType<GameManager>();
-        Um = FindAnyObjectByType<UnitManager>();
+        _mm = FindAnyObjectByType<MapManager>();
+        _gm = FindAnyObjectByType<GameManager>();
+        _um = FindAnyObjectByType<UnitManager>();
 
         // Scan the map and put all the buldings in the Buildings dictionary
         ScanMapForBuildings();
@@ -60,14 +66,14 @@ public class BuildingManager : MonoBehaviour
     // Scan the map and put all the buldings in the Buildings dictionary
     private void ScanMapForBuildings()
     {
-        Buildings = new Dictionary<Vector3Int, Building>();
-        foreach (var pos in Mm.Map.cellBounds.allPositionsWithin)
+        _buildingFromPosition = new Dictionary<Vector3Int, Building>();
+        foreach (var pos in _mm.Map.cellBounds.allPositionsWithin)
         {
-            TerrainDataSO posTile = Mm.GetTileData(pos);
+            TerrainDataSO posTile = _mm.GetTileData(pos);
             if (posTile != null && posTile.TerrainType == ETerrains.Building)
             {
-                BuildingDataSO currData = _buildingDataFromTile[Mm.Map.GetTile<Tile>(pos)];
-                Buildings.Add(pos, new Building(pos, currData.BuildingType, (int)currData.Color));
+                BuildingDataSO currData = _buildingDataFromTile[_mm.Map.GetTile<Tile>(pos)];
+                _buildingFromPosition.Add(pos, new Building(currData.BuildingType, pos, (int)currData.Color));
             }
         }
     }
@@ -75,7 +81,7 @@ public class BuildingManager : MonoBehaviour
     // Get building data of given grid position
     public BuildingDataSO GetBuildingData(Vector3Int pos)
     {
-        return _buildingDataFromTile[Mm.Map.GetTile<Tile>(pos)];
+        return _buildingDataFromTile[_mm.Map.GetTile<Tile>(pos)];
     }
 
     // Capture building
@@ -96,18 +102,18 @@ public class BuildingManager : MonoBehaviour
         newUnit.Owner = owner;
         newUnit.HasMoved = true;
         if (newUnit == null) { print("d"); return; }
-        Um.Units.Add(newUnit);
+        _um.Units.Add(newUnit);
     }
 
     // Gain gold every day
     private void GetGoldFromBuildings()
     {
-        foreach (var building in Buildings.Values)
+        foreach (var building in _buildingFromPosition.Values)
         {
-            // MODIFICATION NEEDED: We have tp check whether the building can provide gold or not (only villages can)
+            // MODIFICATION NEEDED : We have to check whether the building can provide gold or not (only villages can)
             if (building.Owner < 4)
             {
-                Gm.Players[building.Owner].Gold += 1000;
+                _gm.Players[building.Owner].Gold += 1000;
             }
         }
     }

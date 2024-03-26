@@ -4,34 +4,35 @@ using UnityEngine.Tilemaps;
 // Class to manage the cursor
 public class CursorManager : MonoBehaviour
 {
-    UnitManager Um;
-    MapManager Mm;
-    BuildingManager Bm;
-    GameManager Gm;
+    // Managers will be needed
+    private UnitManager _um;
+    private MapManager _mm;
+    private BuildingManager _bm;
+    private GameManager _gm;
 
-    // The tile which the cursor is hovering over
+    // This is a property that holds the tile which the cursor is hovering over
     public Vector3Int HoveredOverTile
     {
-        get => Mm.Map.WorldToCell(transform.position);
+        get => _mm.Map.WorldToCell(transform.position);
         set => transform.position = value;
     }
 
-    // 
-    public Vector3Int SaveTile;
+    // Auto-property (the compiler automatically creates a private field for it)
+    public Vector3Int SaveTile { get; set; }
 
     void Start()
     {
         // Get the unit, map, game and building managers from the hierarchy
-        Um = FindAnyObjectByType<UnitManager>();
-        Mm = FindAnyObjectByType<MapManager>();
-        Gm = FindAnyObjectByType<GameManager>();
-        Bm = FindAnyObjectByType<BuildingManager>();
+        _um = FindAnyObjectByType<UnitManager>();
+        _mm = FindAnyObjectByType<MapManager>();
+        _gm = FindAnyObjectByType<GameManager>();
+        _bm = FindAnyObjectByType<BuildingManager>();
     }
 
     void Update()
     {
         // Handle input every frame
-        if(Gm.CurrentStateOfPlayer == EPlayerStates.Idle || Gm.CurrentStateOfPlayer == EPlayerStates.Selecting) {
+        if(_gm.CurrentStateOfPlayer == EPlayerStates.Idle || _gm.CurrentStateOfPlayer == EPlayerStates.Selecting) {
             HandleInput();
         }
     }
@@ -40,7 +41,7 @@ public class CursorManager : MonoBehaviour
     void HandleInput()
     {
         // Dont handle any input if a unit is moving or attacking
-        if (Um.SelectedUnit!= null && Um.SelectedUnit.IsMoving) { return; }
+        if (_um.SelectedUnit!= null && _um.SelectedUnit.IsMoving) { return; }
 
         // X key
         if (Input.GetKeyDown(KeyCode.X))
@@ -77,48 +78,48 @@ public class CursorManager : MonoBehaviour
      void MoveSelector(Vector3Int offset)
     {
         // Dont let the cursor move out of the highlited tiles
-        if (Um.SelectedUnit != null && !Um.SelectedUnit.ValidTiles.ContainsKey(HoveredOverTile + offset))
+        if (_um.SelectedUnit != null && !_um.SelectedUnit.ValidTiles.ContainsKey(HoveredOverTile + offset))
         {
             return;
         }
 
         // If a unit is selected, record the path
-        if (Um.SelectedUnit != null)
+        if (_um.SelectedUnit != null)
         {
             // Undraw the path if we get back the start point
-            if (Um.SelectedUnit.transform.position == HoveredOverTile + offset)
+            if (_um.SelectedUnit.transform.position == HoveredOverTile + offset)
             {
-                Um.UndrawPath();
-                Um.Path.Clear();
-                Um.PathCost = 0;
+                _um.UndrawPath();
+                _um.Path.Clear();
+                _um.PathCost = 0;
             }
             else
             {
-                int index = Um.Path.IndexOf(HoveredOverTile + offset); // Returns -1 if not found
+                int index = _um.Path.IndexOf(HoveredOverTile + offset); // Returns -1 if not found
                 if (index < 0)
                 {
                     // Add tile to path
-                    int cost = Mm.GetTileData(Mm.Map.GetTile<Tile>(HoveredOverTile + offset)).ProvisionsCost;
-                    if (Um.PathCost + cost > Um.SelectedUnit.Provisions) { return; }
-                    Um.UndrawPath();
-                    Um.Path.Add(HoveredOverTile + offset);
-                    Um.PathCost += cost;
+                    int cost = _mm.GetTileData(_mm.Map.GetTile<Tile>(HoveredOverTile + offset)).ProvisionsCost;
+                    if (_um.PathCost + cost > _um.SelectedUnit.Provisions) { return; }
+                    _um.UndrawPath();
+                    _um.Path.Add(HoveredOverTile + offset);
+                    _um.PathCost += cost;
                 }
                 else
                 {
                     // Remove the arrow loop
-                    Um.UndrawPath();
-                    Um.Path.RemoveRange(index + 1, Um.Path.Count - index - 1);
+                    _um.UndrawPath();
+                    _um.Path.RemoveRange(index + 1, _um.Path.Count - index - 1);
 
                     // Recalculate the new provisions cost
-                    Um.PathCost = 0;
-                    foreach (Vector3Int pos in Um.Path)
+                    _um.PathCost = 0;
+                    foreach (Vector3Int pos in _um.Path)
                     {
-                        Um.PathCost += Mm.GetTileData(Mm.Map.GetTile<Tile>(pos)).ProvisionsCost;
+                        _um.PathCost += _mm.GetTileData(_mm.Map.GetTile<Tile>(pos)).ProvisionsCost;
                     }
                 }
             }
-            Um.DrawPath();
+            _um.DrawPath();
         }
         HoveredOverTile += offset;
     }
@@ -126,49 +127,49 @@ public class CursorManager : MonoBehaviour
     // Handle X Click
     private void XClicked()
     {
-        if(Gm.CurrentStateOfPlayer == EPlayerStates.Selecting) 
+        if(_gm.CurrentStateOfPlayer == EPlayerStates.Selecting) 
         {
             // Cancel selection
-            HoveredOverTile = Mm.Map.WorldToCell(Um.SelectedUnit.transform.position);
-            Um.DeselectUnit();       
+            HoveredOverTile = _mm.Map.WorldToCell(_um.SelectedUnit.transform.position);
+            _um.DeselectUnit();       
         }
     }
 
     // Handle Space click
     private void SpaceClicked()
     {
-        Unit refUnit = Um.FindUnit(HoveredOverTile);
+        Unit refUnit = _um.FindUnit(HoveredOverTile);
 
         // If there is a unit on the hovered tile
         if (refUnit != null)
         {
             // Can't select an another unit when one is selected 
-            if (Um.SelectedUnit != null)
+            if (_um.SelectedUnit != null)
             {
-                if (Um.SelectedUnit == refUnit) {  StartCoroutine(Um.MoveUnit());  }
+                if (_um.SelectedUnit == refUnit) {  StartCoroutine(_um.MoveUnit());  }
                 return;
             }
 
             // Can't select an enemy unit
-            if (refUnit.Owner != Gm.PlayerTurn) { return; }
+            if (refUnit.Owner != _gm.PlayerTurn) { return; }
 
             // Can't select a unit that has already moved
             if (refUnit.HasMoved) { return; }
             SaveTile = HoveredOverTile;
-            Um.SelectUnit(refUnit);
+            _um.SelectUnit(refUnit);
         }
         else
         {
-            if (Um.SelectedUnit != null)
+            if (_um.SelectedUnit != null)
             {
                 // Move towards the selected tile
-                StartCoroutine(Um.MoveUnit());
+                StartCoroutine(_um.MoveUnit());
             }
             else
             {
-                if (Bm.Buildings.ContainsKey(HoveredOverTile))
+                if (_bm.BuildingFromPosition.ContainsKey(HoveredOverTile))
                 {
-                    Bm.SpawnUnit(EUnits.Infantry, Bm.Buildings[HoveredOverTile], Gm.PlayerTurn);
+                    _bm.SpawnUnit(EUnits.Infantry, _bm.BuildingFromPosition[HoveredOverTile], _gm.PlayerTurn);
                 }
             }
         }

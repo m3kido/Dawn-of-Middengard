@@ -5,18 +5,21 @@ using UnityEngine;
 // Class to handle the game logic
 public class GameManager : MonoBehaviour
 {
-    public int PlayerTurn = 0;
-    public int Day = 1;
-    public List<Player> Players;
-    public static event Action OnStateChange;
-    private EPlayerStates _currentStateOfPlayer;
-    public EPlayerStates LastStateOfPlayer;
+    // Auto-properties (the compiler automatically creates private fields for them)
+    public int PlayerTurn { get; set; }
+    public int Day { get; set; } = 1;
+    public List<Player> Players { get; set; }
+    public EPlayerStates LastStateOfPlayer { get; set; }
 
-    // We have to discuss this
-    public EPlayerStates CurrentStateOfPlayer { 
+    private EPlayerStates _currentStateOfPlayer;
+    public EPlayerStates CurrentStateOfPlayer // Property for the _currentStateOfPlayer field
+    { 
         get { return _currentStateOfPlayer; } 
         set { _currentStateOfPlayer = value; OnStateChange?.Invoke(); LastStateOfPlayer = _currentStateOfPlayer; }
     }
+
+    // Event to let know that the state of the player has changed
+    public static event Action OnStateChange;
 
     private void Start()
     {

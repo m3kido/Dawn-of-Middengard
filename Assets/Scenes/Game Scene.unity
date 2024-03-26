@@ -269,9 +269,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0fcaaeecc0afcc4287754ff76d0cc24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerTurn: 0
-  Day: 1
-  LastStateOfPlayer: 0
 --- !u!1001 &254822049
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -514,7 +511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _unitPrefabs:
-  - {fileID: 0}
+  - {fileID: -8208926760487793233, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
   _buildingDatas:
   - {fileID: 11400000, guid: 38272c1374edaac4f9048d185515190e, type: 2}
 --- !u!4 &429304257
@@ -632,6 +629,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2109399940}
     m_Modifications:
+    - target: {fileID: -8208926760487793233, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
+      propertyPath: _owner
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2330572529859379085, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
       propertyPath: m_Name
       value: Infantry (1)
@@ -932,6 +933,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1108215501}
   m_CullTransparentMesh: 1
+--- !u!1 &1140495326
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1140495327}
+  m_Layer: 0
+  m_Name: --------------------------- Buildings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1140495327
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1140495326}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -10.337705, y: -4.119351, z: -0.028912816}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1147463295
 GameObject:
   m_ObjectHideFlags: 0
@@ -1113,7 +1145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b5b68f69139c6b40a07e08cc7d29aa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ActionMenu: {fileID: 1855429936}
+  _actionMenu: {fileID: 1855429936}
 --- !u!4 &1503482920
 Transform:
   m_ObjectHideFlags: 0
@@ -3205,10 +3237,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e02ed52d40637c7409c8db9805330415, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Map: {fileID: 1549217452}
-  HighlightMap: {fileID: 333789464}
-  Bordermap: {fileID: 848259614}
-  ArrowMap: {fileID: 2042607301}
+  _map: {fileID: 1549217452}
+  _highlightMap: {fileID: 333789464}
+  _borderMap: {fileID: 848259614}
+  _arrowMap: {fileID: 2042607301}
   _tileDatas:
   - {fileID: 11400000, guid: 1574cfabbd12fe14b8774b8127ae98df, type: 2}
   - {fileID: 11400000, guid: f32556b2a15e77c45bae2f842f357be1, type: 2}
@@ -3331,9 +3363,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b27096ab653ee24f890a3dd49e85cde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Cursor: {fileID: 0}
-  Options: {fileID: 1108215501}
-  WaitOption: {fileID: 3687537325547011197, guid: d52b9603af9e0c349ab8941dbef25a9f, type: 3}
+  _cursor: {fileID: 1663116379, guid: 1e6ea0cb4f1f81a4183640cecc41bb41, type: 3}
+  _options: {fileID: 1108215501}
+  _waitOption: {fileID: 3687537325547011197, guid: d52b9603af9e0c349ab8941dbef25a9f, type: 3}
 --- !u!1 &1896815360
 GameObject:
   m_ObjectHideFlags: 0
@@ -3431,7 +3463,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13691dfd86a514c4cbae0534abf1ae94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SaveTile: {x: 0, y: 0, z: 0}
 --- !u!1 &2042607300
 GameObject:
   m_ObjectHideFlags: 0
@@ -3599,11 +3630,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ffa086c721c8fc45bf3ef823e6a729e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Units: []
-  SelectedUnit: {fileID: 0}
-  SaveTile: {x: 0, y: 0, z: 0}
-  Path: []
-  PathCost: 0
 --- !u!4 &2122443350 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3294983261654783976, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
@@ -3702,12 +3728,13 @@ SceneRoots:
   - {fileID: 1896815362}
   - {fileID: 1652304704}
   - {fileID: 124008779}
-  - {fileID: 429304257}
   - {fileID: 362950345}
   - {fileID: 1258833075}
   - {fileID: 1694422650}
   - {fileID: 633928599}
   - {fileID: 2109399940}
+  - {fileID: 1140495327}
+  - {fileID: 429304257}
   - {fileID: 1335749772}
   - {fileID: 1503482920}
   - {fileID: 1147463298}

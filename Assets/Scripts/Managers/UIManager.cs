@@ -2,50 +2,47 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    //this class should handle:
-    //the menu (appears after moving or selecting a tile) :
-    //lists options 
+    // This class should handle :
+    // The menu (appears after moving or selecting a tile)
+    // Info (appears when hovering on a tile):
+    // Display tile info and unit info if a unit is on the tile
+    // Captain bar
+    // Building menu
 
-    //info (appears when hovering on a tile):
-    //display tile info and unit info if a unit is on the tile
+    private GameManager _gm;
+    [SerializeField] private GameObject _actionMenu;
 
-    //captain bar
-
-    //building menu
-    GameManager Gm;
-    [SerializeField]
-    private GameObject ActionMenu;
-    // Start is called before the first frame update
     private void OnEnable()
     {
         GameManager.OnStateChange += ChangeActiveUI;
     }
+
     private void OnDisable()
     {
         GameManager.OnStateChange -= ChangeActiveUI;
     }
+
     void Awake()
     {
-        Gm=FindAnyObjectByType<GameManager>();
-        
+        _gm=FindAnyObjectByType<GameManager>();
     }
+
     private void Start()
     {
-        ActionMenu.SetActive(false);
+        _actionMenu.SetActive(false);
     }
+
     private void ChangeActiveUI()
     {
-       
-        switch (Gm.LastStateOfPlayer)
+        switch (_gm.LastStateOfPlayer)
         {
-            case EPlayerStates.InActionsMenu: { ActionMenu.SetActive(false); break; }
+            case EPlayerStates.InActionsMenu: { _actionMenu.SetActive(false); break; }
             default: { break; }
         }
-        switch (Gm.CurrentStateOfPlayer)
+        switch (_gm.CurrentStateOfPlayer)
         {
-            case EPlayerStates.InActionsMenu: {  ActionMenu.SetActive(true); break; }
+            case EPlayerStates.InActionsMenu: {  _actionMenu.SetActive(true); break; }
             default: { break; }
         }
-        
     }
 }
