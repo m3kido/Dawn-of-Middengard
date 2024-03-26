@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d30cbf5745505244a41e91f1a72a22c, type: 3}
   m_Name: BuildingSO
   m_EditorClassIdentifier: 
-  TerrainType: 0
-  TerrainsOfSameType:
+  _terrainType: 8
+  _terrainsOfSameType:
   - {fileID: 11400000, guid: fc340f26843474f4da6fa1a1b4b608e9, type: 2}
-  ProvisionsCost: 1
-  DefenceStars: 3
+  _provisionsCost: 1
+  _defenceStars: 3

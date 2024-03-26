@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d30cbf5745505244a41e91f1a72a22c, type: 3}
   m_Name: GrassSO
   m_EditorClassIdentifier: 
-  TerrainName: 1
-  TerrainsOfSameType:
+  _terrainType: 2
+  _terrainsOfSameType:
   - {fileID: 11400000, guid: 245f870947496ae43a6f86c45157a84c, type: 2}
   - {fileID: 11400000, guid: c2a3123aaf2019c4e902b668d136a91a, type: 2}
   - {fileID: 11400000, guid: 5b74f17baf08f064c90aa029148b3c39, type: 2}
-  ProvisionsCost: 1
-  DefenceStars: 1
+  _provisionsCost: 1
+  _defenceStars: 1

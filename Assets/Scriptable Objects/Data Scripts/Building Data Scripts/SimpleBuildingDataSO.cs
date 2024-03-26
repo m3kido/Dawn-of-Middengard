@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // Subclass for  simple buildings
-[CreateAssetMenu(fileName = "SimpleBuilding", menuName = "Building/SimpleBuilding")]
+[CreateAssetMenu(fileName = "SimpleBuilding", menuName = "Building/Simple Building")]
 public class SimpleBuildingDataSO : BuildingDataSO
 {
     // Can be captured
