@@ -128,4 +128,17 @@ public class UnitManager : MonoBehaviour
     {
         foreach (var unit in Units) unit.HasMoved = false;
     }
+<<<<<<< Updated upstream
 }
+=======
+
+    public void EndMove()
+    {
+        SelectedUnit.Fuel -= PathCost;
+        Path.Clear();
+        PathCost = 0;
+        SelectedUnit.HasMoved = true;
+        SelectedUnit = null;
+    }
+}
+>>>>>>> Stashed changes

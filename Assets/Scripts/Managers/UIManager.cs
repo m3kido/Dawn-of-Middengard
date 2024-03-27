@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -16,6 +14,22 @@ public class UIManager : MonoBehaviour
     //building menu
 
     // Start is called before the first frame update
+<<<<<<< Updated upstream
+=======
+    private void OnEnable()
+    {
+        GameManager.OnStateChange += ChangeActiveUI;
+    }
+    private void OnDisable()
+    {
+        GameManager.OnStateChange -= ChangeActiveUI;
+    }
+    void Awake()
+    {
+        Gm = FindAnyObjectByType<GameManager>();
+
+    }
+>>>>>>> Stashed changes
     private void Start()
     {
     }
@@ -23,5 +37,25 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+<<<<<<< Updated upstream
+=======
+
+        //switch (Gm.LastState)
+        //{
+        //    case EGameStates.ActionMenu: { ActionMenu.SetActive(false); break; }
+        //    default: { break; }
+        //}
+
+        if (Gm.LastState == EGameStates.ActionMenu) ActionMenu.SetActive(false);
+
+        if (Gm.GameState == EGameStates.ActionMenu) ActionMenu.SetActive(true);
+
+        //switch (Gm.GameState)
+        //{
+        //    case EGameStates.ActionMenu: {  ActionMenu.SetActive(true); break; }
+        //    default: { break; }
+        //}
+
+>>>>>>> Stashed changes
     }
 }
