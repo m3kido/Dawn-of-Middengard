@@ -10,6 +10,8 @@ public class ActionMenu : MonoBehaviour
     private GameManager _gm;
     private UnitManager _um;
     private BuildingManager _bm;
+    private Camera _camera;
+    private RectTransform _rect;
 
     [SerializeField] private Sprite _cursor;
     [SerializeField] private GameObject _options;
@@ -17,13 +19,12 @@ public class ActionMenu : MonoBehaviour
     private int _selectedOption;
 
     [SerializeField] private GameObject _waitOption;
+    [SerializeField] private GameObject _captureOption;
     // public GameObject FireOption;
-    // public GameObject CaptureOption;
+
 
     private GameObject _waitOptionInstance;
-    private GameObject _waitOptionInstance2;
-    // public GameObject FireOption;
-    // public GameObject CaptureOption;
+    private GameObject _captureOptionInstance;
 
     private void Awake()
     {
@@ -31,23 +32,51 @@ public class ActionMenu : MonoBehaviour
         _um = FindAnyObjectByType<UnitManager>();
         _gm = FindAnyObjectByType<GameManager>();
         _bm = FindAnyObjectByType<BuildingManager>();
+        _camera = Camera.main;
+        _rect = GetComponent<RectTransform>();
+
         _optionsList = new List<GameObject>();
 
         _waitOptionInstance = Instantiate(_waitOption, _options.transform);
         _waitOptionInstance.SetActive(false);
-        _waitOptionInstance2 = Instantiate(_waitOption, _options.transform);
-        _waitOptionInstance2.SetActive(false);
+
+        _captureOptionInstance = Instantiate(_captureOption, _options.transform);
+        _captureOptionInstance.SetActive(false);
+
     }
 
     private void OnEnable()
     {
-        if (_bm.BuildingFromPosition == null) { return; }
+        if (_gm.CurrentStateOfPlayer != EPlayerStates.InActionsMenu) { return; }
+        //this will be reusable
+        //this changes the location of the menu based on the cursor position
+        //local position returns the position considiring its parent(canvas) as the reference
+        //im adding the width because the pivot of action menu is on its top right
+        if (_camera.transform.position.x - _cm.transform.position.x >= 0)
+        {
+            //if the menu is on the left of the screen
+            if (_rect.localPosition.x < 0)
+            {
+                _rect.localPosition = new Vector3(-1 * _rect.localPosition.x + _rect.rect.width, _rect.localPosition.y, _rect.localPosition.z);
+
+            }
+        }
+        else
+        {
+            //if the menu is on the right of the screen
+            if (_rect.localPosition.x > 0)
+            {
+                _rect.localPosition = new Vector3(-1 * _rect.localPosition.x + _rect.rect.width, _rect.localPosition.y, _rect.localPosition.z);
+
+            }
+        }
+
         CalculateOptions();
     }
 
     private void OnDisable()
     {
-        if(_optionsList.Count == 0) { return; }
+        if (_optionsList.Count == 0) { return; }
         _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.clear;
         foreach (GameObject option in _optionsList) { option.SetActive(false); }
         _optionsList.Clear();
@@ -68,22 +97,34 @@ public class ActionMenu : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Space))
         {
 
-            if (_optionsList[_selectedOption].name.Contains("Wait"))
+            if (_optionsList[_selectedOption] == _waitOptionInstance)
+            {
+                _um.EndMove();
+                _gm.CurrentStateOfPlayer = EPlayerStates.Idle;
+            }
+            else if (_optionsList[_selectedOption] == _captureOptionInstance)
             {
                 _um.EndMove();
                 _gm.CurrentStateOfPlayer = EPlayerStates.Idle;
             }
         }
+        //change selected option
         else if (Input.GetKeyDown(KeyCode.UpArrow))
         {
+            //getting the cursor image and  hiding it
             _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.clear;
+
             _selectedOption = (_selectedOption - 1 + _optionsList.Count) % _optionsList.Count;
+
+            //getting the cursor image and  showing it
             _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
         }
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.clear;
-            _selectedOption = (_selectedOption + 1 ) % _optionsList.Count;
+
+            _selectedOption = (_selectedOption + 1) % _optionsList.Count;
+
             _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
         }
     }
@@ -92,16 +133,12 @@ public class ActionMenu : MonoBehaviour
     {
 
         // CheckFire();
-        CheckCapture();
-        _waitOptionInstance2.SetActive(true);
-        _optionsList.Add(_waitOptionInstance2);
+        CheckAbility();
 
-        if (_optionsList.Count > 0)
-        {
-            _selectedOption = 0;
-            _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
+        _selectedOption = 0;
+        _optionsList[_selectedOption].transform.GetChild(0).GetComponent<Image>().color = Color.white;
 
-        }
+
     }
 
     /* private void CheckFire()
@@ -112,13 +149,14 @@ public class ActionMenu : MonoBehaviour
           }
       } */
 
-    private void CheckCapture()
+    private void CheckAbility()
     {
-        if (_bm.BuildingFromPosition == null) { return; }
+        
         var building = _bm.BuildingFromPosition.ContainsKey(_cm.HoveredOverTile) ? _bm.BuildingFromPosition[_cm.HoveredOverTile] : null;
-        if (building != null && building.Owner != _gm.PlayerTurn)
+        if (building != null /*&& building.Owner != _gm.PlayerTurn*/)
         {
-            // OptionsList.Add(Instantiate(CaptureOption, Options.transform));
+            _captureOptionInstance.SetActive(true);
+            _optionsList.Add(_captureOptionInstance);
         }
         else
         {

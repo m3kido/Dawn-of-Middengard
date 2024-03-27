@@ -46,6 +46,7 @@ public class BuildingManager : MonoBehaviour
         _mm = FindAnyObjectByType<MapManager>();
         _gm = FindAnyObjectByType<GameManager>();
         _um = FindAnyObjectByType<UnitManager>();
+        
 
         // Scan the map and put all the buldings in the Buildings dictionary
         ScanMapForBuildings();

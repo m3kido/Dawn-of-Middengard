@@ -10,6 +10,8 @@ public class UIManager : MonoBehaviour
     // Building menu
 
     private GameManager _gm;
+   
+    
     [SerializeField] private GameObject _actionMenu;
 
     private void OnEnable()
@@ -25,6 +27,8 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         _gm=FindAnyObjectByType<GameManager>();
+        
+        
     }
 
     private void Start()
@@ -44,5 +48,6 @@ public class UIManager : MonoBehaviour
             case EPlayerStates.InActionsMenu: {  _actionMenu.SetActive(true); break; }
             default: { break; }
         }
+       
     }
 }
