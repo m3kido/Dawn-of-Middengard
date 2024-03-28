@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -2253911629886400664, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
       propertyPath: m_Name
-      value: knight-idle
+      value: Infantry
       objectReference: {fileID: 0}
     - target: {fileID: 3626916397498700004, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
       propertyPath: m_SortingOrder
@@ -22,11 +22,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.5
+      value: 0.642
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.021
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
       propertyPath: m_LocalPosition.z
@@ -67,6 +67,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -2253911629886400664, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
       insertIndex: -1
       addedObject: {fileID: -8392252582679079715}
+    - targetCorrespondingSourceObject: {fileID: -2253911629886400664, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2305301234715960147}
   m_SourcePrefab: {fileID: -8435245712485981826, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
 --- !u!1 &2330572529859379085 stripped
 GameObject:
@@ -80,16 +83,37 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2330572529859379085}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 404f1d4d0780d774699fb585be0156d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Data: {fileID: 11400000, guid: 377aff6a34101e841bb51303d0cf5623, type: 2}
+  _health: 10
   Fuel: 100
   IsSelected: 0
-  MoveRange: 3
-  TeamSide: 0
   Owner: 0
+  Type: 0
   IsMoving: 0
-  HasMoved: 0
+--- !u!114 &2305301234715960147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2330572529859379085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f97d3c23b37cec442bb1e3b87d4c61c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Data: {fileID: 11400000, guid: 377aff6a34101e841bb51303d0cf5623, type: 2}
+  _health: 10
+  Fuel: 100
+  IsSelected: 0
+  Owner: 0
+  Type: 0
+  IsMoving: 0
+  _minRange: 1
+  _maxRange: 3
+  _ammo: 0a00000010270000

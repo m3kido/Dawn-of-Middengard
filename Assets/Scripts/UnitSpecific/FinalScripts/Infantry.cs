@@ -1,0 +1,5 @@
+
+
+public class Infantry : AttackingUnit
+{
+}

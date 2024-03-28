@@ -16,11 +16,12 @@ public class MapManager : MonoBehaviour
     [SerializeField] private RuleTile _borderedTile;
     [SerializeField] private Tile[] _arrowTiles;
 
-    private Dictionary<Tile, TileData> _dataFromTile = new Dictionary<Tile, TileData>();
+    private Dictionary<Tile, TileData> _dataFromTile = new();
     
     // Get tile datas of every tile type from the inspector
     private void Awake()
     {
+        
         foreach (var tileData in _tileDatas)
         {
             foreach(var tile in tileData.Tiles) 
