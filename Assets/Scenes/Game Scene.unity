@@ -702,6 +702,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8090770256088663198, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
+      propertyPath: _maxRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090770256088663198, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
       propertyPath: _ammo.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -712,6 +716,18 @@ PrefabInstance:
     - target: {fileID: 8090770256088663198, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
       propertyPath: _ammo.Array.data[1]
       value: 10000
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090770256088663198, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
+      propertyPath: _weapons.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090770256088663198, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
+      propertyPath: _weapons.Array.data[0]
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8090770256088663198, guid: 16d041e1da1b7074f8b4b55e85328605, type: 3}
+      propertyPath: _weapons.Array.data[1]
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

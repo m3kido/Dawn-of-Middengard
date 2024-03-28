@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public enum EWeaponTypes
 {
@@ -27,8 +28,7 @@ public class Weapon
 public class AttackingUnit : Unit
 {
     // List of damages that this attacking unit can apply to other units using each weapon 
-    [SerializeField] List<Weapon> _weapons; 
-
+    [SerializeField] List<Weapon> _weapons;
     [SerializeField] int _minRange;
     [SerializeField] int _maxRange;
     [SerializeField] List<int> _ammo; //Ammo for first and second weapon 
@@ -57,12 +57,10 @@ public class AttackingUnit : Unit
             }
         }
     }
-
-
     public float CalculateDamage(Unit target , AttackingUnit attacker, int weaponIndex )
     {
         
-        int baseDamage = _weapons[weaponIndex].DamageList[(int)target.Type];
+        int baseDamage = _weapons[0].DamageList[(int)target.Type];
         Player attackerPlayer = Gm.Players[attacker.Owner];
         Captain attackerCaptain = attackerPlayer.Captain;
         int celesteAttack = attackerPlayer.IsCelesteActive ? attackerCaptain.CelesteDefense : 0;
@@ -96,7 +94,7 @@ public class AttackingUnit : Unit
     }
 
     // scans area for targets in an Intervall [ min range, max range[
-    List<Unit> ScanTargets(AttackingUnit attacker, int weaponIndex)
+    List<Unit> ScanTargets(AttackingUnit attacker)
     {
         if (attacker == null || attacker.transform == null || Mm == null)
         {
@@ -105,6 +103,11 @@ public class AttackingUnit : Unit
         }
 
         var attackerPos = Mm.Map.WorldToCell(attacker.transform.position);
+        if (attackerPos == null )
+        {
+            Debug.Log("Error a mon 7bb"); 
+            return new List<Unit>();
+        }
         List<Unit> targets = new List<Unit>();
 
         foreach (var unit in FindObjectsOfType<Unit>())
@@ -119,7 +122,7 @@ public class AttackingUnit : Unit
 
             bool IsInRange = (L1Distance(attackerPos, potentialTargetPos) >= attacker.MinRange) && (L1Distance(attackerPos, potentialTargetPos) < attacker.MaxRange);
             bool IsEnemy = attacker.Owner != unit.Owner;
-            bool IsDamageable = attacker._weapons[weaponIndex].DamageList[(int)unit.Type] != 0;
+            bool IsDamageable = attacker._weapons[0].DamageList[(int)unit.Type] != 0;
 
             if (IsInRange && IsEnemy && IsDamageable)
             {
@@ -131,32 +134,42 @@ public class AttackingUnit : Unit
     }
 
 
-    public void HighlightTargets(AttackingUnit attacker, int weaponIndex)
+    public void HighlightTargets(AttackingUnit attacker)
     {
-        List<Unit> targets = ScanTargets(attacker , weaponIndex);
-        foreach (var target in targets)
+        List<Unit> targets = ScanTargets(attacker);
+        if (targets.Count > 0 ) {
+                    foreach (var target in targets)
         {
-            // Change the material color of the target to red
-            Renderer renderer = target.GetComponent<Renderer>();
-            if (renderer != null)
-            {
-                MaterialPropertyBlock propBlock = new MaterialPropertyBlock();
-                renderer.GetPropertyBlock(propBlock);
-                propBlock.SetColor("_Color", Color.red); // Set the color to red
-                renderer.SetPropertyBlock(propBlock);
+
+
+                // Change the material color of the target to red
+                Renderer renderer = target.GetComponent<Renderer>();
+                if (renderer != null)
+                {
+                    Debug.Log(target.Type);
+                    MaterialPropertyBlock propBlock = new MaterialPropertyBlock();
+                    renderer.GetPropertyBlock(propBlock);
+                    propBlock.SetColor("_Color", Color.green); // Set the color to red
+                    renderer.SetPropertyBlock(propBlock);
+                }
             }
         }
+        else
+        {
+            Debug.Log("FUCKING 7AYAT");
+        }
+
     }
 
-    public bool canAttack(AttackingUnit attacker, int weaponIndex)
+    public bool canAttack(AttackingUnit attacker)
     {
         // Return true if there are targets available, otherwise return false
-        if (attacker == null)
+        List<Unit> targets = ScanTargets(attacker);
+        if (targets.Count > 0)
         {
-            Debug.LogWarning("Attacker is null. Unable to check if it can attack.");
-            return false;
+            return true;
         }
-        return ScanTargets(attacker ,  weaponIndex).Count > 0;
+        return false ;
     }
 
 

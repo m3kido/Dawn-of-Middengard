@@ -92,6 +92,7 @@ MonoBehaviour:
   Owner: 1
   Type: 0
   IsMoving: 0
+  _weapons: 0a0000000b000000
   _minRange: 0
-  _maxRange: 0
+  _maxRange: 2
   _ammo: 0a00000010270000

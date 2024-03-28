@@ -27,7 +27,7 @@ public class AttackManager : MonoBehaviour
     public bool UnitCanAttack(AttackingUnit attacker, int weaponIndex)
     {
         
-        return attacker.canAttack(attacker , weaponIndex); 
+        return attacker.canAttack(attacker); 
     }
     //till now hada li fih 
     //dok mbed ndir fih handling te3 Attack Action 

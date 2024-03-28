@@ -87,7 +87,8 @@ public class ActionMenu : MonoBehaviour
                 {
                     attacker = Um.SelectedUnit as AttackingUnit;
                     attacker.Attacked = true;
-                    StartCoroutine(EndMoveAfterDelay(1.0f));
+                    attacker.HighlightTargets(attacker); 
+                    StartCoroutine(EndMoveAfterDelay(3.0f));
                     
                 }
 
@@ -142,20 +143,25 @@ public class ActionMenu : MonoBehaviour
             return;
         }
 
-        if (Um.SelectedUnit is AttackingUnit)
+        if (Um.SelectedUnit is AttackingUnit && Um.SelectedUnit != null)
         {
              attacker = Um.SelectedUnit as AttackingUnit;
-             if(attacker = null) {
+             if(attacker == null) {
                 Debug.Log("Attacker is null"); 
-                }
+             }
              else
-            {
-                if(Am.UnitCanAttack(attacker , 0))
+             {
+                if(attacker.canAttack(attacker) )
                 {
                     AttackOptionInstance.SetActive(true);
                     OptionsList.Add(AttackOptionInstance);
                 }
-            }
+                else
+                {
+                    WaitOptionInstance.SetActive(true);
+                    OptionsList.Add(WaitOptionInstance);
+                }
+             }
            
                
             
