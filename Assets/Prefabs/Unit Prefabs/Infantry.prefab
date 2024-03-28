@@ -22,11 +22,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.5
+      value: 0.642
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.021
       objectReference: {fileID: 0}
     - target: {fileID: 7878350319992209165, guid: 1a9d96f7703b59a4183b6bfd77c55566, type: 3}
       propertyPath: m_LocalPosition.z
@@ -114,4 +114,6 @@ MonoBehaviour:
   Owner: 0
   Type: 0
   IsMoving: 0
-  _damageList: 370000002d00000005000000010000000f0000000f000000190000000000000000000000000000000000000000000000
+  _minRange: 1
+  _maxRange: 3
+  _ammo: 0a00000010270000
