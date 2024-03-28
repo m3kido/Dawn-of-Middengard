@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +16,7 @@ public class ActionMenu : MonoBehaviour
 
     public Sprite Cursor;
     public GameObject Options;
-    List<GameObject> OptionsList;//Hadi optionList ta3na 
+    List<GameObject> OptionsList;
     int SelectedOption;
 
     [SerializeField] GameObject WaitOption;
@@ -24,8 +26,8 @@ public class ActionMenu : MonoBehaviour
 
     private GameObject WaitOptionInstance;
     private GameObject AttackOptionInstance;
-    //Till now hada li dayrin option 
 
+    private AttackingUnit attacker; 
     //public GameObject FireOption;
     //public GameObject CaptureOption;
     private void Awake()
@@ -80,14 +82,16 @@ public class ActionMenu : MonoBehaviour
             }
             //Logique to do when the player choose to attack 
             else if (OptionsList[SelectedOption].name.Contains("Attack")) {
-                AttackingUnit AttackingUnit =(AttackingUnit) Um.SelectedUnit;
-                AttackingUnit.HighlightTargets(0);
-                if (Input.GetKeyDown(KeyCode.Space))
+
+                if (Um.SelectedUnit is AttackingUnit)
                 {
-                    Um.EndMove();
-                    Gm.GameState = EGameStates.Idle;
+                    attacker = Um.SelectedUnit as AttackingUnit;
+                    attacker.Attacked = true;
+                    StartCoroutine(EndMoveAfterDelay(1.0f));
+                    
                 }
-                   
+
+                ;
             }
         }
         else if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -105,6 +109,12 @@ public class ActionMenu : MonoBehaviour
 
 
 
+    }
+    private IEnumerator EndMoveAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Um.EndMove();
+        Gm.GameState = EGameStates.Idle;
     }
     private void CalculateOptions()
     {
@@ -126,14 +136,37 @@ public class ActionMenu : MonoBehaviour
     //hna ncheki ida n9der nattacki ()9awed :)
     private void CheckAttackOption()
     {
-        if (Um.SelectedUnit is AttackingUnit && Am.UnitCanAttack((AttackingUnit)Um.SelectedUnit, 0)) // 0 hadak just for weapon 0 brk 
-            //AttackingUnit manager vide eliya 
+        if (Um.SelectedUnit == null)
         {
-            AttackOptionInstance.SetActive(true);
-            OptionsList.Add(AttackOptionInstance);
+            Debug.LogWarning("SelectedUnit is null. Unable to check attack option.");
+            return;
+        }
+
+        if (Um.SelectedUnit is AttackingUnit)
+        {
+             attacker = Um.SelectedUnit as AttackingUnit;
+             if(attacker = null) {
+                Debug.Log("Attacker is null"); 
+                }
+             else
+            {
+                if(Am.UnitCanAttack(attacker , 0))
+                {
+                    AttackOptionInstance.SetActive(true);
+                    OptionsList.Add(AttackOptionInstance);
+                }
+            }
+           
+               
+            
+        }
+        else
+        {
+            Debug.LogWarning("SelectedUnit is not an AttackingUnit. Unable to check attack option.");
         }
     }
-    
+
+
     private void CheckCapture()
     {
         if (Bm.Buildings == null) { return; }

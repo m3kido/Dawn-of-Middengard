@@ -37,36 +37,58 @@ public class AttackingUnit : Unit
     public int MinRange { get => _minRange; set => _minRange = value; }
     public int MaxRange { get => _maxRange; set => _maxRange = value; }
 
-    public float CalculateDamage(Unit target , int weaponIndex )
+    private bool _hasAttacked = false;
+    public bool Attacked
+    {
+        get
+        {
+            return _hasAttacked;
+        }
+        set
+        {
+            _hasAttacked = value;
+            if (_hasAttacked)
+            {
+                rend.color = Color.red;
+            }
+            else
+            {
+                rend.color = Color.white;
+            }
+        }
+    }
+
+
+    public float CalculateDamage(Unit target , AttackingUnit attacker, int weaponIndex )
     {
         
         int baseDamage = _weapons[weaponIndex].DamageList[(int)target.Type];
-        Player attackerPlayer = Gm.Players[this.Owner];
+        Player attackerPlayer = Gm.Players[attacker.Owner];
         Captain attackerCaptain = attackerPlayer.Captain;
         int celesteAttack = attackerPlayer.IsCelesteActive ? attackerCaptain.CelesteDefense : 0;
         float attackDamage = baseDamage * (1 + attackerCaptain.PassiveAttack) * (1 + celesteAttack);
 
 
         int terrainStars = Mm.GetTileData(Mm.Map.WorldToCell(target.transform.position)).Defence;
-        Player targetPlayer = Gm.Players[this.Owner];
+        Player targetPlayer = Gm.Players[attacker.Owner];
         Captain targetCaptain = targetPlayer.Captain;
         int celesteDefense = targetPlayer.IsCelesteActive ? targetCaptain.CelesteDefense : 0;
         float defenseDamage = (1 - terrainStars * target.Health / 1000) * (1 - targetCaptain.PassiveDefense) * (1 - celesteDefense);
 
 
         int chance = (attackerCaptain.Name == Captains.Andrew) ? Random.Range(2, 10) : Random.Range(1, 10);
-        float totalDamage = this.Health / 100 * attackDamage * defenseDamage * (1 + chance / 100);
+        float totalDamage = attacker.Health / 100 * attackDamage * defenseDamage * (1 + chance / 100);
         return totalDamage;
     }
     
-    void ApplyDamage(Unit target, int weaponIndex)
+    void ApplyDamage(Unit target, AttackingUnit attacker ,  int weaponIndex)
     {
-        var damage = CalculateDamage(target,  weaponIndex);
+        var damage = CalculateDamage(target, attacker,  weaponIndex);
 
         target.Health -= (int)damage;
         if (target != null)
         {
-            damage = CalculateDamage( target ,  weaponIndex);
+            damage = CalculateDamage( target , attacker,  weaponIndex);
             this.Health -= (int)damage;
         }
 
@@ -74,18 +96,30 @@ public class AttackingUnit : Unit
     }
 
     // scans area for targets in an Intervall [ min range, max range[
-    List<Unit> ScanTargets( int weaponIndex)
+    List<Unit> ScanTargets(AttackingUnit attacker, int weaponIndex)
     {
-        var attackerPos = Mm.Map.WorldToCell(this.transform.position);
-        List<Unit> targets = new();
+        if (attacker == null || attacker.transform == null || Mm == null)
+        {
+            Debug.LogError("Error: Null reference detected in ScanTargets method.");
+            return new List<Unit>();
+        }
+
+        var attackerPos = Mm.Map.WorldToCell(attacker.transform.position);
+        List<Unit> targets = new List<Unit>();
 
         foreach (var unit in FindObjectsOfType<Unit>())
         {
+            if (unit == null || unit.transform == null)
+            {
+                Debug.LogWarning("Skipping null unit reference.");
+                continue;
+            }
+
             var potentialTargetPos = Mm.Map.WorldToCell(unit.transform.position);
 
-            bool IsInRange = (L1Distance(attackerPos, potentialTargetPos) >= this.MinRange) && (L1Distance(attackerPos, potentialTargetPos) < this.MaxRange);
-            bool IsEnemy = this.Owner != unit.Owner;
-            bool IsDamageable = this._weapons[weaponIndex].DamageList[(int)unit.Type] != 0;
+            bool IsInRange = (L1Distance(attackerPos, potentialTargetPos) >= attacker.MinRange) && (L1Distance(attackerPos, potentialTargetPos) < attacker.MaxRange);
+            bool IsEnemy = attacker.Owner != unit.Owner;
+            bool IsDamageable = attacker._weapons[weaponIndex].DamageList[(int)unit.Type] != 0;
 
             if (IsInRange && IsEnemy && IsDamageable)
             {
@@ -96,9 +130,10 @@ public class AttackingUnit : Unit
         return targets;
     }
 
-    public void HighlightTargets(int weaponIndex)
+
+    public void HighlightTargets(AttackingUnit attacker, int weaponIndex)
     {
-        List<Unit> targets = ScanTargets(weaponIndex);
+        List<Unit> targets = ScanTargets(attacker , weaponIndex);
         foreach (var target in targets)
         {
             // Change the material color of the target to red
@@ -113,10 +148,15 @@ public class AttackingUnit : Unit
         }
     }
 
-    public bool canAttack(int weaponIndex)
+    public bool canAttack(AttackingUnit attacker, int weaponIndex)
     {
         // Return true if there are targets available, otherwise return false
-        return ScanTargets(weaponIndex).Count > 0;
+        if (attacker == null)
+        {
+            Debug.LogWarning("Attacker is null. Unable to check if it can attack.");
+            return false;
+        }
+        return ScanTargets(attacker ,  weaponIndex).Count > 0;
     }
 
 

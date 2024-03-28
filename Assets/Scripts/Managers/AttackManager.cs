@@ -8,6 +8,7 @@ public class AttackManager : MonoBehaviour
     public static AttackManager Instance;
 
     private void Awake()
+
     {
         // Ensure only one instance of AttackManager exists
         if (Instance == null)
@@ -26,7 +27,7 @@ public class AttackManager : MonoBehaviour
     public bool UnitCanAttack(AttackingUnit attacker, int weaponIndex)
     {
         
-        return attacker.canAttack(weaponIndex); 
+        return attacker.canAttack(attacker , weaponIndex); 
     }
     //till now hada li fih 
     //dok mbed ndir fih handling te3 Attack Action 
