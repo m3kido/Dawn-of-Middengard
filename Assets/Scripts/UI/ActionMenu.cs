@@ -104,6 +104,7 @@ public class ActionMenu : MonoBehaviour
             }
             else if (_optionsList[_selectedOption] == _captureOptionInstance)
             {
+                _bm.CaptureBuilding(_cm.HoveredOverTile);
                 _um.EndMove();
                 _gm.CurrentStateOfPlayer = EPlayerStates.Idle;
             }
@@ -132,7 +133,8 @@ public class ActionMenu : MonoBehaviour
     private void CalculateOptions()
     {
 
-        // CheckFire();
+        // CheckFire();// if is an attacking unit
+        //CheckLoad // if loading unit
         CheckAbility();
 
         _selectedOption = 0;
@@ -153,15 +155,27 @@ public class ActionMenu : MonoBehaviour
     {
         
         var building = _bm.BuildingFromPosition.ContainsKey(_cm.HoveredOverTile) ? _bm.BuildingFromPosition[_cm.HoveredOverTile] : null;
-        if (building != null /*&& building.Owner != _gm.PlayerTurn*/)
+        if (building != null)
         {
-            _captureOptionInstance.SetActive(true);
-            _optionsList.Add(_captureOptionInstance);
+            if ( building.Owner != _gm.PlayerTurn)
+            {
+                if (_um.SelectedUnit.Data.UnitType == EUnits.Infantry || _um.SelectedUnit.Data.UnitType == EUnits.Lancers)
+                {
+                    _captureOptionInstance.SetActive(true);
+                    _optionsList.Add(_captureOptionInstance);
+                    return;
+                }
+            }
+            else
+            {
+                //heal
+            }
+            
+           
         }
-        else
-        {
-            _waitOptionInstance.SetActive(true);
-            _optionsList.Add(_waitOptionInstance);
-        }
+       
+        _waitOptionInstance.SetActive(true);
+        _optionsList.Add(_waitOptionInstance);
+        
     }
 }

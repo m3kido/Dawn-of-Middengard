@@ -78,7 +78,18 @@ public class BuildingManager : MonoBehaviour
             }
         }
     }
-
+    //change the sprite
+    private void ChangeBuildingOwner(Building building,int owner)
+    {
+        foreach(var SO in _buildingDatas)
+        {
+            if(SO.Color == _gm.Players[_gm.PlayerTurn].Color) {
+                _mm.Map.SetTile(building.Position, SO.BuildingTile);
+            }
+        }
+        building.Owner = owner;
+        building.Health = 20;
+    }
     // Get building data of given grid position
     public BuildingDataSO GetBuildingData(Vector3Int pos)
     {
@@ -86,20 +97,20 @@ public class BuildingManager : MonoBehaviour
     }
 
     // Capture building
-    public void CaptureBuilding(Building building, Unit unit)
+    public void CaptureBuilding(Vector3Int pos)
     {
-        building.Health -= unit.Health;
-        if (building.Health <= 0)
+        
+        BuildingFromPosition[pos].Health -= _um.SelectedUnit.Health;
+        if (BuildingFromPosition[pos].Health <= 0)
         {
-            building.Owner = unit.Owner;
-            building.Health = 20;
+            ChangeBuildingOwner(BuildingFromPosition[pos], _gm.PlayerTurn);
         }
     }
-
+    
     // Spawn a unit from a building
     public void SpawnUnit(EUnits unitType, Building building, int owner)
     {
-        Unit newUnit = Instantiate<Unit>(_unitPrefabs[(int)unitType], building.Position, Quaternion.identity);
+        Unit newUnit = Instantiate<Unit>(_unitPrefabs[(int)unitType], building.Position, Quaternion.identity,_um.transform);
         newUnit.Owner = owner;
         newUnit.HasMoved = true;
         if (newUnit == null) { print("d"); return; }

@@ -167,7 +167,7 @@ public class CursorManager : MonoBehaviour
             }
             else
             {
-                if (_bm.BuildingFromPosition.ContainsKey(HoveredOverTile))
+                if (_bm.BuildingFromPosition.ContainsKey(HoveredOverTile) && _bm.BuildingFromPosition[HoveredOverTile].Owner==_gm.PlayerTurn)
                 {
                     _bm.SpawnUnit(EUnits.Infantry, _bm.BuildingFromPosition[HoveredOverTile], _gm.PlayerTurn);
                 }
